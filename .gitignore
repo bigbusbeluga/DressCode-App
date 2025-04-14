@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Node
+node_modules/
+dist/
+
+# Django
+[db.sqlite3](http://_vscodecontentref_/5)
+staticfiles/
