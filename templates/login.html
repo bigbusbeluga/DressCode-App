@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" class="font-inter">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DressCode</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-cover bg-center" style="background-image: url('static/images/login_bg.jpg');">
+
+  <!-- Navbar -->
+  <header class="w-full flex justify-between items-center px-8 py-4 bg-white border-b shadow-sm">
+    <div class="flex items-center space-x-2">
+      <img src="static/images/logo.png" alt="DressCode Logo" class="h-8 w-auto" />
+      <span class="text-2xl font-bold text-[#F28B8B]">DRESS</span>
+      <span class="text-2xl font-bold text-[#9CC1DA]">CODE</span>
+    </div>
+    <nav class="flex space-x-6 items-center">
+      <a href="#" class="text-sm font-medium text-gray-700 hover:underline">FAQs</a>
+      <a href="#" class="text-sm font-medium text-gray-700 hover:underline">About Us</a>
+      <button class="px-4 py-2 border border-[#F28B8B] text-[#F28B8B] rounded hover:bg-[#f28b8b]/10">Login</button>
+      <button class="px-4 py-2 bg-[#F28B8B] text-white rounded hover:bg-[#e17777]">Sign up</button>
+    </nav>
+  </header>
+
+  <!-- Main Section -->
+  <main class="flex flex-col items-center justify-center px-4 py-12">
+    <h1 class="text-4xl font-bold mb-6">Welcome!</h1>
+    <div class="w-full max-w-md bg-white border border-black rounded-[10px] shadow-lg px-6 py-8">
+      <div class="flex justify-between mb-4">
+        <button class="w-1/2 py-2 bg-[#F28B8B] text-black font-semibold border border-black rounded-[10px]">SIGN IN</button>
+        <button class="w-1/2 py-2 bg-white text-black font-semibold rounded-tr-lg">SIGN UP</button>
+      </div>
+
+      <form class="space-y-4">
+        <input type="email" placeholder="Email Address*" class="w-full border rounded px-4 py-2" required />
+        <input type="password" placeholder="Password*" class="w-full border rounded px-4 py-2" required />
+
+        <div class="flex justify-between items-center text-sm">
+          <a href="#" class="italic text-gray-500">Forgot Password?</a>
+          <label class="flex items-center space-x-1 text-sm text-gray-600">
+            <input type="checkbox" class="form-checkbox" />
+            <span>Remember me</span>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 rounded">SIGN IN</button>
+      </form>
+
+      <div class="text-center my-4 text-sm text-gray-500">or sign in with:</div>
+
+      <div class="flex justify-between space-x-4">
+        <button class="flex items-center justify-center w-1/2 py-2 border rounded">
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-6 w-6" />
+        </button>
+        <button class="flex items-center justify-center w-1/2 py-2 border rounded">
+          <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" class="h-6 w-6" />
+        </button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
