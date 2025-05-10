@@ -3,10 +3,13 @@ from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 def home(request):
-    return render(request, 'base.html')
+    return render(request, 'base/base.html')
 
 def signup_view(request):
-    return render(request, 'signup.html')
+    return render(request, 'base/signup.html')
 
 def login_view(request):
-    return render(request, 'login.html')
+    return render(request, 'base/login.html')
+
+def mixmatch_view(request):
+    return render(request, 'base/mixmatch.html')
