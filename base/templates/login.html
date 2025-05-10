@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Login - DressCode{% endblock %}
+
+{% block content %}
+<body class="min-h-screen bg-cover bg-center" style="background-image: url('{% static 'images/login_bg.jpg' %}');">
+  <!-- Main Section -->
+  <main class="flex flex-col items-center justify-center px-4 py-12">
+    <h1 class="mb-6 text-4xl font-bold">Welcome!</h1>
+    <div class="w-full max-w-md rounded-[10px] border border-black bg-white px-6 py-8 shadow-lg">
+      <div class="mb-4 flex justify-between">
+        <button class="w-1/2 rounded-[10px] border border-black bg-[#FFB6B9] py-2 font-semibold text-black">LOG IN</button>
+        <a href="{% url 'signup'%}" class="w-1/2 py-2 font-semibold text-black text-center">SIGN UP</a>        
+      </div>
+
+      <form class="space-y-4">
+        <input type="email" placeholder="Email Address*" class="w-full rounded border px-4 py-2" required />
+        <input type="password" placeholder="Password*" class="w-full rounded border px-4 py-2" required />
+
+        <div class="flex items-center justify-between text-sm">
+          <a href="#" class="text-gray-500 italic">Forgot Password?</a>
+          <label class="flex items-center space-x-1 text-sm text-gray-600">
+            <input type="checkbox" class="form-checkbox" />
+            <span>Remember me</span>
+          </label>
+        </div>
+
+        <button type="submit" class="w-full rounded bg-gray-300 py-2 font-semibold text-black hover:bg-gray-400">SIGN IN</button>
+      </form>
+
+      <div class="my-4 text-center text-sm text-gray-500">or sign in with:</div>
+
+      <div class="flex justify-between space-x-4">
+        <button class="flex w-1/2 items-center justify-center rounded border py-2">
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" class="h-6 w-6" />
+        </button>
+        <button class="flex w-1/2 items-center justify-center rounded border py-2">
+          <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook" class="h-6 w-6" />
+        </button>
+      </div>
+    </div>
+  </main>
+</body>
+{% endblock %}
