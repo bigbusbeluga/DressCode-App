@@ -1,16 +1,17 @@
 {% extends 'main.html' %}
+{% load static %}
 {% block title %}
-MixMatch - DressCode
+Mix & Match - DressCode
 {% endblock %}
 {% block navbar %}
-<!-- Override the navbar block with nothing -->
+<!-- Override navbar block with nothing -->
 {% endblock %}
 
 {% block content %}
     <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-[#F9F9F9]">
             <a href="#" class="flex items-center ps-2.5 mb-5">
-                <img src="" class="w-auto h-auto" alt="DressCode Logo" />
+                <img src="{% static 'images/logo.png' %}" class="h-12" alt="DressCode Logo" />
             </a>
             <ul class="font-extrabold">
                 <li>
@@ -54,13 +55,13 @@ MixMatch - DressCode
         </div>
     </aside>
 
-    <main class="p-4 sm:ml-64">
-        <h2 class="text-4xl font-bold mb-4 text-gray-700">Outfit Canvas</h2>
+    <main class="p-4 sm:ml-64 mt-8">
+        <h2 class="text-4xl font-bold mb-4 text-gray-800 pl-4">Outfit Canvas</h2>
         <!-- Flex container for the two sections -->
         <div class="flex gap-4">
             <!-- Outfit Canvas -->
-            <section class="w-1/3 bg-white rounded-2xl p-4 flex flex-col items-center">
-                <div id="outfit-canvas" class="w-72 h-[500px] border rounded-xl p-4 flex flex-wrap justify-center items-center gap-4 bg-[#fefefe] shadow-md">
+            <section class="w-1/3 bg-white rounded-2xl p-4 flex flex-col items-center shadow-md border">
+                <div id="outfit-canvas" class="w-96 h-[500px] border-2 border-dashed border-red-300 rounded-xl p-4 flex flex-wrap justify-center items-center gap-4 bg-[#fefefe] shadow-md">
                     <!-- Dynamically added clothes will appear here -->
                 </div>
                 <button class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
@@ -69,14 +70,26 @@ MixMatch - DressCode
             <!-- Clothes Collection -->
             <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
                 <div class="flex justify-between mb-4">
-                    <div class="flex gap-2">
-                        <button class="rounded-full px-4 py-1 bg-white border">ALL</button>
-                        <button class="rounded-full px-4 py-1 bg-white border">Tops</button>
-                        <button class="rounded-full px-4 py-1 bg-white border">Bottoms</button>
-                        <button class="rounded-full px-4 py-1 bg-white border">Footwear</button>
-                        <button class="rounded-full px-4 py-1 bg-white border">Accessories</button>
+                    <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
+                        <button class="filter-btn rounded-full px-8 py-1 border font-bold bg-blue-200 text-blue-900" data-filter="ALL">ALL</button>
+                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Tops">Tops</button>
+                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Bottoms">Bottoms</button>
+                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Footwear">Footwear</button>
+                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Accessories">Accessories</button>
                     </div>
                     <button class="bg-pink-300 px-4 py-1 rounded-md">Upload</button>
+                </div>
+
+                <!-- Search bar || ung filter function kau na lang mag define hahahah-->
+                <div class="mb-4 relative">
+                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-2xl pointer-events-none">search</span>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search"
+                        class="w-full pl-10 pr-4 py-2 border border-gray-700 rounded-lg"
+                        onkeyup="filterClothes()"
+                    />
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     {% for item in clothes %}
@@ -90,28 +103,29 @@ MixMatch - DressCode
         </div>
     </main>
 
-   <!-- Overlay Modal (responsive) -->
-<div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2" style="display: none;">
-  <div class="relative bg-white rounded-2xl shadow-lg w-full h-full max-w-[1300px] max-h-[900px] p-4 sm:p-8 flex flex-col border-4 border-gray-300 overflow-auto">
-    <button onclick="document.getElementById('upload-modal').style.display='none'"
-      class="absolute top-4 right-4 text-3xl text-gray-400 hover:text-black font-bold">&times;</button>
-    <h2 class="text-3xl font-bold mb-6">Upload Image</h2>
-    <div class="flex flex-col items-center justify-center flex-1 py-8">
-      <label class="inline-block px-6 py-2 bg-gray-200 rounded-full font-semibold cursor-pointer hover:bg-gray-300">
-        <input type="file" class="hidden" multiple>
-        Choose Files
-      </label>
-      <p class="mt-8 text-xs text-gray-500 text-center">
-        Upload your images and videos here by dragging and dropping or select from your device<br>
-        Files types supported: JPG, PNG, MP4<br>
-        Max size: 20 MB
-      </p>
+    <!-- Overlay Modal (responsive) -->
+    <div id="upload-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2" style="display: none;">
+    <div class="relative bg-white rounded-2xl shadow-lg w-full h-full max-w-[1300px] max-h-[900px] p-4 sm:p-8 flex flex-col border-4 border-gray-300 overflow-auto">
+        <button onclick="document.getElementById('upload-modal').style.display='none'"
+        class="absolute top-4 right-4 text-3xl text-gray-400 hover:text-black font-bold">&times;</button>
+        <h2 class="text-3xl font-bold mb-6">Upload Image</h2>
+        <div class="flex flex-col items-center justify-center flex-1 py-8">
+        <label class="inline-block px-6 py-2 bg-gray-200 rounded-full font-semibold cursor-pointer hover:bg-gray-300">
+            <input type="file" class="hidden" multiple>
+            Choose Files
+        </label>
+        <p class="mt-8 text-xs text-gray-500 text-center">
+            Upload your images and videos here by dragging and dropping or select from your device<br>
+            Files types supported: JPG, PNG, MP4<br>
+            Max size: 20 MB
+        </p>
+        </div>
     </div>
-  </div>
-</div>
-<!-- Example trigger button (place this wherever you want to open the modal) -->
-<button onclick="document.getElementById('upload-modal').style.display='flex'"
-  class="bg-pink-300 px-4 py-2 rounded-md mt-8">Open Upload Modal</button>
+    </div>
+
+    <!-- Example trigger button (place this wherever you want to open the modal) -->
+    <button onclick="document.getElementById('upload-modal').style.display='flex'"
+    class="bg-pink-300 px-4 py-2 rounded-md mt-8">Open Upload Modal</button>
 
     <script>
         function addToCanvas(imageUrl) {
@@ -120,5 +134,22 @@ MixMatch - DressCode
             img.className = 'h-24';
             document.getElementById('outfit-canvas').appendChild(img);
         }
+
+        // Ito ung script para ma-highlight ung selected filter
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-blue-700', 'text-white', 'bg-blue-200', 'text-blue-900');
+                    b.classList.add('text-black');
+                });
+                this.classList.remove('text-black');
+                this.classList.add('bg-blue-700', 'text-white');
+                // Optionally, call filter function here
+                // filterClothes(this.dataset.filter);
+            });
+        });
+        // Set initial state for "ALL"
+        document.querySelector('.filter-btn[data-filter="ALL"]').classList.remove('bg-white', 'text-black');
+        document.querySelector('.filter-btn[data-filter="ALL"]').classList.add('bg-blue-700', 'text-white');
     </script>
 {% endblock %}
