@@ -1,4 +1,7 @@
-{% extends 'base/base.html' %}
+
+{% extends 'main.html' %}
+
+{% block content %}
 {% load static %}
 {% block title %}Sign Up - DressCode{% endblock %}
 
@@ -9,6 +12,7 @@
     <h1 class="mb-6 text-4xl font-bold">Welcome!</h1>
     <div class="w-full max-w-md rounded-[10px] border border-black bg-white px-6 py-8 shadow-lg">
       <div class="mb-4 flex justify-between">        
+        <a href="" class="w-1/2 py-2 font-semibold text-black text-center">LOG IN</a>
         <a href="{% url 'login'%}" class="w-1/2 py-2 font-semibold text-black text-center">LOG IN</a>
         <button class="w-1/2 rounded-[10px] border border-black bg-[#FFB6B9] py-2 font-semibold text-black">SIGN UP</button>
       </div>
@@ -41,4 +45,5 @@
     </div>
   </main>
 <body>
-{% endblock %}
+{% endblock content %}
+
