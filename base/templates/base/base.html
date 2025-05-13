@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" class="font-inter">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DressCode{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'dist/styles.css' %}">
+    <style>
+        body {
+          font-family: 'Inter', sans-serif;
+        }
+      </style>
+</head>
+<body class="font-inter">
+  {% block navbar %}
+  <!-- Navbar -->
+  <header class="flex w-full items-center justify-between border-b bg-[#F1F8FF] px-8 py-4 shadow-sm">
+    <div class="flex items-center space-x-2">
+      <img src="{% static 'images/logo.png' %}" alt="DressCode Logo" class="h-14 w-auto" />
+    </div>
+    <nav class="flex items-center space-x-6">
+      <a href="#" class="text-sm font-medium text-gray-700 hover:underline">FAQs</a>
+      <a href="#" class="text-sm font-medium text-gray-700 hover:underline">About Us</a>
+      <button class="rounded border border-[#F28B8B] px-4 py-2 text-[#F28B8B] hover:bg-[#f28b8b]/10">Log in</button>
+      <a href="{% url 'signup' %}" class="rounded bg-[#F28B8B] px-4 py-2 text-white hover:bg-[#e17777]">Sign up</a>
+    </nav>
+  </header>
+  {% endblock %}
+
+    {% block content %}{% endblock %}
+</body>
+</html>
