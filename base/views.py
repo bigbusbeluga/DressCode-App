@@ -17,7 +17,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
-            return redirect('mixmatchz')
+            return redirect('mixmatch')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -37,17 +37,22 @@ def login(request):
     return render(request, 'base/login.html', {'form': form})
 
 def mixmatch(request):
-    return render(request, 'base/mixmatch.html')
+    if request.user.is_authenticated:
+        clothing = Clothing.objects.filter(user=request.user)
+    else:
+        clothing = Clothing.objects.none()  # Show nothing for anonymous users
+    context = {'clothing': clothing}
+    return render(request, 'base/mixmatch.html', context)
 
 def addClothing(request):
-    form = addClothingForm()
     if request.method == "POST":
         form = addClothingForm(request.POST, request.FILES)
         if form.is_valid():
             clothing = form.save(commit=False)
+            clothing.user = request.user  # Assign the current user
             clothing.save()
             return redirect('mixmatch')
     else:
         form = addClothingForm()
-    context = {'form' : form}
-    return render(request, 'base/add_Clothing.html', context)
+    context = {'form': form}
+    return render(request, 'base/add_clothing.html', context)
