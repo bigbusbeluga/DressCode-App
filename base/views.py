@@ -3,8 +3,10 @@ from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import SingUpForm 
 from django.contrib.auth import login as auth_login
+from django.forms import ModelForm
+from .models import Clothing
+from .forms import SingUpForm, addClothingForm
 
 def home(request):
     return render(request, 'base/base.html')
@@ -15,7 +17,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
-            return redirect('login')
+            return redirect('mixmatchz')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -27,7 +29,7 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('home')
+            return redirect('mixmatch')
         else:
             messages.error(request, 'Username or password is incorrect')
     else:
@@ -37,3 +39,15 @@ def login(request):
 def mixmatch(request):
     return render(request, 'base/mixmatch.html')
 
+def addClothing(request):
+    form = addClothingForm()
+    if request.method == "POST":
+        form = addClothingForm(request.POST, request.FILES)
+        if form.is_valid():
+            clothing = form.save(commit=False)
+            clothing.save()
+            return redirect('mixmatch')
+    else:
+        form = addClothingForm()
+    context = {'form' : form}
+    return render(request, 'base/add_Clothing.html', context)
