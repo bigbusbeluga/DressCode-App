@@ -1,0 +1,80 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %}
+Add Clothing - DressCode
+{% endblock %}
+{% block navbar %}
+<!-- Override navbar block with nothing -->
+{% endblock %}
+
+{% block content %}
+{% include 'sidebar.html' %}
+<main class="sm:ml-64 p-4">
+    <h2 class="text-4xl font-bold mb-4 text-gray-800">Upload Clothing Item</h2>
+    <div class="flex justify-center gap-8">
+        <!-- Form -->
+        <form id="addClothingForm" method="POST" action="" enctype="multipart/form-data" class="space-y-4 max-w-md w-full bg-white p-6 rounded-lg shadow border">
+            {% csrf_token %}
+            <div>
+                {{ form.name.label_tag }}
+                {{ form.name }}
+                {{ form.name.errors }}
+            </div>
+            <div>
+                {{ form.brand.label_tag }}
+                {{ form.brand }}
+                {{ form.brand.errors }}
+            </div>
+            <div>
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+            <div class="flex items-center gap-2">        
+                {{ form.isFavorite.label_tag }}
+                {{ form.isFavorite }}
+                {{ form.isFavorite.errors }}
+            </div>
+            <div>
+                {{ form.image.label_tag }}
+                {{ form.image }}
+                {{ form.image.errors }}
+            </div>
+            <div>
+                {{ form.category.label_tag }}
+                {{ form.category }}
+                {{ form.category.errors }}
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Clothing</button>
+            <button type="button" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400" onclick="window.location.href='{% url 'mixmatch' %}'">Cancel</button>
+        </form>
+        <!-- Image Preview -->
+        <div class="flex flex-col items-center border rounded-lg shadow p-4 max-w-md w-full">
+            <p class="mb-4 text-center">
+                <strong>Image Preview:</strong>
+                <span class="text-gray-500">Upload an image to see the preview.</span>
+            </p>
+            <img id="imagePreview" src="#" alt="Image Preview" class="w-auto h-auto object-contain border rounded-lg shadow hidden" />
+        </div>
+    </div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.querySelector('input[type="file"][name="image"]');
+    const preview = document.getElementById('imagePreview');
+    if (input) {
+        input.addEventListener('change', function(event) {
+            const [file] = event.target.files;
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+            } else {
+                preview.src = "#";
+                preview.classList.add('hidden');
+            }
+        });
+    }
+});
+</script>
+
+{% endblock content %}
