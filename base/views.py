@@ -53,6 +53,9 @@ def wardrobe(request):
     context = {'clothing': clothing}
     return render(request, 'base/wardrobe.html', context)
 
+def laundry(request):
+    return render(request, 'base/laundry.html')
+
 @login_required
 def addClothing(request):
     if request.method == "POST":
