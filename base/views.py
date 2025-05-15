@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -70,11 +70,12 @@ def addClothing(request):
     context = {'form': form}
     return render(request, 'base/add_clothing.html', context)
 
+@login_required
 def deleteClothing(request, pk):
-    clothing = Clothing.objects.get(id=pk)
+    clothing = get_object_or_404(Clothing, id=pk, user=request.user)
     if request.method == "POST":
         clothing.delete()
-        return redirect('wardrobe')
+        return redirect('wardrobe')  # Redirect to mixmatch after deletion
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
