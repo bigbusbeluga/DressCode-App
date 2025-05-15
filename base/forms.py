@@ -20,4 +20,4 @@ class SingUpForm(UserCreationForm):
 class addClothingForm(ModelForm):
     class Meta:
         model = Clothing
-        fields = ['name', 'brand', 'description', 'isFavorite', 'image']
+        fields = ['name', 'brand', 'description', 'isFavorite', 'image', 'category']
