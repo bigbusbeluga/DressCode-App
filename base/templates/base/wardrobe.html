@@ -1,8 +1,19 @@
 {% extends 'main.html' %}
 
-<!-- delete action -->
- <form method="POST" action="">
-    {% csrf_token %}
-    
+{% block content %}
 
- </form>
+{% include 'navbar.html' %}
+
+{% for clothing in clothing %}
+    <div>
+        <span>{{ clothing.name }}</span>
+        {% if clothing.id %}
+            <a href="{% url 'delete-Clothing' item.id %}" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</a>
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No clothing items in your wardrobe.</p>
+{% endfor %}
+
+{% endblock %}
+

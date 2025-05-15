@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
+from django.contrib.auth.decorators import login_required
 from .models import Clothing
 from .forms import SingUpForm, addClothingForm
 
@@ -44,6 +45,15 @@ def mixmatch(request):
     context = {'clothing': clothing}
     return render(request, 'base/mixmatch.html', context)
 
+def wardrobe(request):
+    if request.user.is_authenticated:
+        clothing = Clothing.objects.filter(user=request.user)
+    else:
+        clothing = Clothing.objects.none()
+    context = {'clothing': clothing}
+    return render(request, 'base/wardrobe.html', context)
+
+@login_required
 def addClothing(request):
     if request.method == "POST":
         form = addClothingForm(request.POST, request.FILES)
@@ -63,4 +73,5 @@ def deleteClothing(request, pk):
         clothing.delete()
         return redirect('wardrobe')
     context = {'clothing': clothing}
-    return render(request, 'base/wardrobe.html', context)
+    return render(request, 'base/delete_clothing.html', context)
+
