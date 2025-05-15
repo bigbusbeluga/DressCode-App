@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -25,7 +26,7 @@ def signup(request):
         form = SingUpForm()
     return render(request, 'base/signup.html', {'form': form})
 
-def login(request):
+def login_user(request):
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -37,6 +38,11 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'base/login.html', {'form': form})
 
+def logout_user(request):
+    logout(request)
+    return redirect('home')
+    
+@login_required(login_url='login')
 def mixmatch(request):
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
@@ -45,6 +51,7 @@ def mixmatch(request):
     context = {'clothing': clothing}
     return render(request, 'base/mixmatch.html', context)
 
+@login_required(login_url='login')
 def wardrobe(request):
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
@@ -56,7 +63,7 @@ def wardrobe(request):
 def laundry(request):
     return render(request, 'base/laundry.html')
 
-@login_required
+@login_required(login_url='login')
 def addClothing(request):
     if request.method == "POST":
         form = addClothingForm(request.POST, request.FILES)
@@ -70,7 +77,7 @@ def addClothing(request):
     context = {'form': form}
     return render(request, 'base/add_clothing.html', context)
 
-@login_required
+@login_required(login_url='login')
 def deleteClothing(request, pk):
     clothing = get_object_or_404(Clothing, id=pk, user=request.user)
     if request.method == "POST":

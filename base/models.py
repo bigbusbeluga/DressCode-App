@@ -13,7 +13,7 @@ class Clothing(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100)
     brand = models.CharField(max_length=100)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField(null=True, blank=True)
     isFavorite = models.BooleanField(default=False)
     image = models.ImageField(upload_to='clothing_images', null=False, blank=False, default='clothing_images/default.jpg')
