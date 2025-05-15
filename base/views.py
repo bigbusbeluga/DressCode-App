@@ -56,3 +56,11 @@ def addClothing(request):
         form = addClothingForm()
     context = {'form': form}
     return render(request, 'base/add_clothing.html', context)
+
+def deleteClothing(request, pk):
+    clothing = Clothing.objects.get(id=pk)
+    if request.method == "POST":
+        clothing.delete()
+        return redirect('wardrobe')
+    context = {'clothing': clothing}
+    return render(request, 'base/wardrobe.html', context)
