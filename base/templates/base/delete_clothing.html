@@ -7,7 +7,7 @@ Delete Clothes - DressCode
 <!-- Override navbar block with nothing -->
 {% endblock %}
 {% block sidebar %}{% endblock %}
-
+{% block content %}
 <!-- delete action -->
  <form method="POST" action="">
     {% csrf_token %}
@@ -22,4 +22,4 @@ Delete Clothes - DressCode
         </div>
     </div>
  </form>
-    
+{% endblock %}
