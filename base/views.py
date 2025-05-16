@@ -94,3 +94,6 @@ def deleteClothing(request, pk):
         return redirect('wardrobe')  # Redirect to mixmatch after deletion
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
+
+def landing(request):
+    return render(request, 'base/landing.html')
