@@ -13,6 +13,9 @@ from .forms import SingUpForm, addClothingForm
 def home(request):
     return render(request, 'base/base.html')
 
+def homee(request):
+    return render(request, 'base/home.html')
+
 def signup(request):
     if request.method == "POST":
         form = SingUpForm(request.POST)
