@@ -10,8 +10,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Clothing, Category
 from .forms import SingUpForm, addClothingForm
 
+def landing(request):
+    return render(request, 'base/landing.html')
+
 def home(request):
     return render(request, 'base/base.html')
+
+def homepage(request):
+    return render(request, 'base/homepage.html')
 
 def signup(request):
     if request.method == "POST":
@@ -40,7 +46,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home')
+    return redirect('landing')
     
 @login_required(login_url='login')
 def mixmatch(request):
@@ -95,5 +101,3 @@ def deleteClothing(request, pk):
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
-def landing(request):
-    return render(request, 'base/landing.html')
