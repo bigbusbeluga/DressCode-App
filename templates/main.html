@@ -29,6 +29,11 @@
         </nav>
     </header>
     {% endblock %}
+
+    {% block sidebar %}
+        {% include 'sidebar.html' %}
+    {% endblock %}
+    
     <div id="content">
         {% block content %}
        
