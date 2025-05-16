@@ -15,7 +15,7 @@ urlpatterns = [
     path('laundry/', views.laundry, name='laundry'),
     
     path('mixmatch/', views.mixmatch, name='mixmatch'),
-    path('mixmatch/deleteClothing/<str:pk>/', views.deleteClothing, name='delete-Clothing'),
+    path('wardrobe/deleteClothing/<str:pk>/', views.deleteClothing, name='delete-Clothing'),
     path('mixmatch/addClothing/', views.addClothing, name='add-Clothing'),
     
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

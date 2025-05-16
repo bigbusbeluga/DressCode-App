@@ -32,7 +32,12 @@ Wardrobe - DressCode
         <h3 class="text-lg font-medium mb-4">{{ selected_category }} Items</h3>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% for item in clothing %}
-          <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer" onclick="openModal({{ item.id }})">
+          <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
+            <a href="{% url 'delete-Clothing' item.id %}" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </a>
             <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-contain mb-2">
             <h4 class="text-sm font-semibold">{{ item.name }}</h4>
             <p class="text-xs text-gray-500">{{ item.category.name }}</p>
@@ -40,7 +45,6 @@ Wardrobe - DressCode
               <span class="text-red-500 text-xl">♥</span>
             {% endif %}
           </div>
-
           {% empty %}
           <p class="col-span-full text-center text-gray-500">No items found.</p>
           {% endfor %}
@@ -50,43 +54,5 @@ Wardrobe - DressCode
   </div>
 </div>
 
-<!-- Modal -->
-<div id="itemModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md relative">
-    <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
-    <img id="modalImage" src="#" alt="Item" class="w-full h-48 object-cover mb-4">
-    <h4 id="modalName" class="text-xl font-semibold mb-1"></h4>
-    <p id="modalCategory" class="text-sm text-gray-500 mb-2"></p>
-    <p id="modalDescription" class="text-sm text-gray-700 mb-4"></p>
-    <div class="flex justify-between items-center">
-      <a id="modalEdit" href="#" class="text-blue-500 hover:text-blue-700 text-sm">Edit</a>
-      <form id="modalDeleteForm" method="POST" onsubmit="return confirm('Delete this item?')">
-        {% csrf_token %}
-        <button type="submit" class="text-red-500 hover:text-red-700 text-sm">Delete</button>
-      </form>
-    </div>
-  </div>
-</div>
 
-<script>
-  const modal = document.getElementById('itemModal');
-
-  function openModal(id) {
-    fetch(`/api/clothing/${id}/`)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('modalImage').src = data.image;
-        document.getElementById('modalName').textContent = data.name;
-        document.getElementById('modalCategory').textContent = data.category;
-        document.getElementById('modalDescription').textContent = data.description;
-        document.getElementById('modalEdit').href = `/clothing/edit/${id}/`;
-        document.getElementById('modalDeleteForm').action = `/clothing/delete/${id}/`;
-        modal.classList.remove('hidden');
-      });
-  }
-
-  function closeModal() {
-    modal.classList.add('hidden');
-  }
-</script>
 {% endblock %}
