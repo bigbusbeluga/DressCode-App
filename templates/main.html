@@ -17,7 +17,7 @@
 <body>
     <!-- Navbar -->
      {% block navbar %}
-    <header class="flex w-full items-center justify-between border-b bg-[#F1F8FF] px-8 py-4 shadow-sm">
+    <header class="flex w-full items-center justify-between border bg-[#F1F8FF] px-8 py-4">
         <div class="flex items-center space-x-2">
         <img src="{% static 'images/logo.png' %}" alt="DressCode Logo" class="h-14 w-auto" />
         </div>
@@ -29,6 +29,11 @@
         </nav>
     </header>
     {% endblock %}
+
+    {% block sidebar %}
+        {% include 'sidebar.html' %}
+    {% endblock %}
+    
     <div id="content">
         {% block content %}
        

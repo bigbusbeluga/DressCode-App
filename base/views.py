@@ -7,11 +7,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
-from .models import Clothing
+from .models import Clothing, Category
 from .forms import SingUpForm, addClothingForm
+
+def landing(request):
+    return render(request, 'base/landing.html')
 
 def home(request):
     return render(request, 'base/base.html')
+
+def homepage(request):
+    return render(request, 'base/homepage.html')
 
 def signup(request):
     if request.method == "POST":
@@ -40,7 +46,7 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home')
+    return redirect('landing')
     
 @login_required(login_url='login')
 def mixmatch(request):
@@ -53,11 +59,20 @@ def mixmatch(request):
 
 @login_required(login_url='login')
 def wardrobe(request):
+    category_filter = request.GET.get('category')
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
+        if category_filter and category_filter != "All":
+            clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()
-    context = {'clothing': clothing}
+    categories = Category.objects.all()
+    
+    context = {
+        'clothing': clothing,
+        'categories': categories,
+        'selected_category': category_filter or 'All'
+    }
     return render(request, 'base/wardrobe.html', context)
 
 def laundry(request):

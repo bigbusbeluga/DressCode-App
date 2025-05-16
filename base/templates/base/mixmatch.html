@@ -26,11 +26,13 @@ Mix & Match - DressCode
             <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
                 <div class="flex justify-between mb-4">
                     <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
-                        <button class="filter-btn rounded-full px-8 py-1 border font-bold bg-blue-200 text-blue-900" data-filter="ALL">ALL</button>
-                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Tops">Tops</button>
-                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Bottoms">Bottoms</button>
-                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Footwear">Footwear</button>
-                        <button class="filter-btn rounded-full px-8 py-1 border font-bold" data-filter="Accessories">Accessories</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold bg-blue-200 text-blue-900" data-filter="ALL">ALL</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Tops">Outfits</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Tops">Tops</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Bottoms">Bottoms</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Footwear">Footwear</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Accessories">Hats</button>
+                        <button class="filter-btn rounded-full px-4 py-1 border font-bold" data-filter="Accessories">Accessories</button>
                     </div>
                     <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a>
                 </div>
@@ -46,11 +48,12 @@ Mix & Match - DressCode
                         onkeyup="filterClothes()"
                     />
                 </div>
-                <div class="grid grid-cols-3 gap-4">
+                <div class="grid grid-cols-4 gap-4">
                     {% for item in clothing %}
-                    <div class="bg-white p-2 rounded-xl shadow flex flex-col items-center">
+                    <div class="bg-white p-2 rounded-xl shadow flex flex-col items-center"
+                         data-image-url="{{ item.image.url }}">
                         <img src="{{ item.image.url }}" alt="Clothing" class="h-28 object-contain">
-                        <button onclick="addToCanvas('{{ item.image.url }}')" class="mt-2 text-sm bg-white border border-black px-2 py-1 rounded-md">Add</button>
+                        <button onclick="addToCanvas('{{ item.image.url }}')" class="mt-2 text-[12px] bg-white border border-black px-2 py-1 rounded-md">Add</button>
                     </div>
                     {% endfor %}
                 </div>
@@ -59,10 +62,40 @@ Mix & Match - DressCode
     </main>
     <script>
         function addToCanvas(imageUrl) {
+            // para ma-hide sa collection ung item na na-add sa canvas
+            const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
+            if (collectionItem) {
+                collectionItem.style.display = 'none';
+            }
+
+            // container for the image and delete button
+            const container = document.createElement('div');
+            container.className = 'relative inline-block m-2';
+
+            // para ma-create image sa canvas
             const img = document.createElement('img');
             img.src = imageUrl;
             img.className = 'h-24';
-            document.getElementById('outfit-canvas').appendChild(img);
+
+            // create delete button
+            const btn = document.createElement('button');
+            btn.innerHTML = '<span class="material-symbols-rounded text-xs text-red-400">close</span>';
+            btn.type = 'button';
+            btn.className = 'absolute top-0 right-0 bg-white rounded-full w-7 h-7 shadow hover:bg-red-100 p-0.5';
+            btn.onclick = function() {
+                container.remove();
+                // para ma-show ulit ung item sa collection
+                if (collectionItem) {
+                    collectionItem.style.display = '';
+                }
+            };
+
+            // append image and button sa container
+            container.appendChild(img);
+            container.appendChild(btn);
+
+            // add container sa canvas
+            document.getElementById('outfit-canvas').appendChild(container);
         }
 
         // Ito ung script para ma-highlight ung selected filter
