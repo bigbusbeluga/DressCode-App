@@ -80,7 +80,8 @@ Mix & Match - DressCode
                 <div class="grid grid-cols-4 gap-4">
                     {% for item in clothing %}
                     <div class="bg-white p-2 rounded-xl shadow flex flex-col items-center"
-                         data-image-url="{{ item.image.url }}">
+                         data-image-url="{{ item.image.url }}"
+                         data-name="{{ item.name|lower }}">
                         <img src="{{ item.image.url }}" alt="Clothing" class="h-28 object-contain">
                         <button onclick="addToCanvas('{{ item.image.url }}')" class="mt-2 text-[12px] bg-white border border-black px-2 py-1 rounded-md">Add</button>
                     </div>
@@ -128,6 +129,21 @@ Mix & Match - DressCode
 
             // add container sa canvas
             document.getElementById('outfit-canvas').appendChild(container);
+        }
+
+        function filterClothes() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toLowerCase();
+            const collectionItems = document.querySelectorAll('.grid > div');
+
+            collectionItems.forEach(item => {
+                const imgSrc = item.getAttribute('data-name').toLowerCase();
+                if (imgSrc.includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
         }
     </script>
 {% endblock %}
