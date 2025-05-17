@@ -33,11 +33,52 @@ Wardrobe - DressCode
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% for item in clothing %}
           <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
-            <a href="{% url 'delete-Clothing' item.id %}" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
+            <!-- Delete Button triggers modal -->
+            <button type="button" onclick="openModal('{{ item.id }}')" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </a>
+            </button>
+            <!-- Delete Modal -->
+            <div id="delete-modal-{{ item.id }}" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
+              <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative transform scale-95 opacity-0 transition-all duration-300" id="modal-content-{{ item.id }}">
+                <h3 class="text-lg font-semibold mb-2">Delete Item</h3>
+                <p class="mb-4">Are you sure you want to delete <span class="font-bold">{{ item.name }}</span>?</p>
+                <div class="flex justify-end gap-2">
+                  <button type="button" onclick="closeModal('{{ item.id }}')" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors duration-200">Cancel</button>
+                  <form method="post" action="{% url 'delete-Clothing' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">Delete</button>
+                  </form>
+                </div>
+                <button type="button" onclick="closeModal('{{ item.id }}')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <script>
+            function openModal(id) {
+              const modal = document.getElementById('delete-modal-' + id);
+              const content = document.getElementById('modal-content-' + id);
+              modal.classList.remove('hidden');
+              modal.classList.add('opacity-100');
+              content.classList.remove('scale-95', 'opacity-0');
+              content.classList.add('scale-100', 'opacity-100');
+            }
+            function closeModal(id) {
+              const modal = document.getElementById('delete-modal-' + id);
+              const content = document.getElementById('modal-content-' + id);
+              modal.classList.remove('opacity-100');
+              content.classList.remove('scale-100', 'opacity-100');
+              content.classList.add('scale-95', 'opacity-0');
+              modal.classList.add('hidden');
+            }
+            document.querySelectorAll('[id^="delete-modal-"]').forEach(function(modal) {
+              modal.classList.remove('opacity-100');
+            });
+            </script>
             <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-contain mb-2">
             <h4 class="text-sm font-semibold">{{ item.name }}</h4>
             <p class="text-xs text-gray-500">{{ item.category.name }}</p>
