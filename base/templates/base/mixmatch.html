@@ -19,7 +19,7 @@ Mix & Match - DressCode
                 <div id="outfit-canvas" class="w-96 h-[510px] border-2 border-dashed border-red-300 rounded-xl p-4 flex flex-wrap justify-center items-center gap-4 bg-[#fefefe] shadow-md">
                     <!-- Dynamically added clothes will appear here -->
                 </div>
-                <button class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
+                <button id="save-outfit-btn" class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
             </section>
 
             <!-- Clothes Collection -->
@@ -170,5 +170,31 @@ Mix & Match - DressCode
                 }
             });
         }
+
+        document.getElementById('save-outfit-btn').addEventListener('click', function() {
+            const canvas = document.getElementById('outfit-canvas');
+            const images = Array.from(canvas.querySelectorAll('img')).map(img => img.src);
+            if (images.length === 0) {
+                alert('Add at least one item to save an outfit.');
+                return;
+            }
+            fetch('{% url "save-outfit" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}',
+                },
+                body: JSON.stringify({ images }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Outfit saved!');
+                    // Optionally clear the canvas or update UI
+                } else {
+                    alert('Failed to save outfit.');
+                }
+            });
+        });
     </script>
 {% endblock %}
