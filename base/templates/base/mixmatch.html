@@ -93,8 +93,26 @@ Mix & Match - DressCode
         </div>
     </main>
 
+    <!-- Modal for item limit -->
+    <div id="limitModal" class="fixed inset-0 flex items-center justify-center bg-gray-700/50 transition z-50 hidden">
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-xs text-center">
+        <h3 class="text-lg font-bold mb-2">Limit Reached!</h3>
+        <p class="mb-4">You can only add up to 8 items to the outfit canvas.</p>
+        <button onclick="closeLimitModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">OK</button>
+      </div>
+    </div>
+
     <script>
+        let itemCount = 0; // Track the number of items added
+
         function addToCanvas(imageUrl) {
+            const canvas = document.getElementById('outfit-canvas');
+            const currentItems = canvas.querySelectorAll('div').length;
+            if (currentItems >= 8) {
+                showLimitModal();
+                return;
+            }
+
             // para ma-hide sa collection ung item na na-add sa canvas
             const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
             if (collectionItem) {
@@ -117,6 +135,7 @@ Mix & Match - DressCode
             btn.className = 'absolute top-0 right-0 bg-white rounded-full w-7 h-7 shadow hover:bg-red-100 p-0.5';
             btn.onclick = function() {
                 container.remove();
+                itemCount--; // Decrease the count when an item is removed
                 // para ma-show ulit ung item sa collection
                 if (collectionItem) {
                     collectionItem.style.display = '';
@@ -129,6 +148,14 @@ Mix & Match - DressCode
 
             // add container sa canvas
             document.getElementById('outfit-canvas').appendChild(container);
+            itemCount++; // Increase the count when an item is added
+        }
+
+        function showLimitModal() {
+            document.getElementById('limitModal').classList.remove('hidden');
+        }
+        function closeLimitModal() {
+            document.getElementById('limitModal').classList.add('hidden');
         }
 
         function filterClothes() {
