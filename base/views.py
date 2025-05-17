@@ -50,11 +50,19 @@ def logout_user(request):
     
 @login_required(login_url='login')
 def mixmatch(request):
+    category_filter = request.GET.get('category')
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
+        if category_filter and category_filter != "All":
+            clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()  # Show nothing for anonymous users
-    context = {'clothing': clothing}
+    categories = Category.objects.all()
+    context = {
+        'clothing': clothing,
+        'categories': categories,
+        'selected_category': category_filter or 'All'
+    }
     return render(request, 'base/mixmatch.html', context)
 
 @login_required(login_url='login')
