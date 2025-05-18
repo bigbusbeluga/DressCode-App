@@ -52,6 +52,7 @@ def homepage(request):
         'current_year': current_year,
         'calendar_days': calendar_days,
         'outfits_json': pyjson.dumps(outfits_json, cls=DjangoJSONEncoder),
+        'username': request.user.username,
     }
     return render(request, 'base/homepage.html', context)
 
@@ -178,6 +179,17 @@ def edit_outfit_date(request, pk):
         date = request.POST.get('date')
         if date:
             outfit.date = date
+            outfit.save()
+        return redirect('wardrobe')
+    return redirect('wardrobe')
+
+@login_required(login_url='login')
+def edit_outfit_name(request, pk):
+    outfit = get_object_or_404(Outfit, pk=pk, user=request.user)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            outfit.name = name
             outfit.save()
         return redirect('wardrobe')
     return redirect('wardrobe')
