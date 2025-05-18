@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login as auth_login
 from django.contrib.auth import authenticate, login, logout
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
+from django.forms.models import model_to_dict
 from .models import Clothing, Category, Outfit
 from .forms import SingUpForm, addClothingForm
 from django.http import JsonResponse
@@ -88,17 +91,22 @@ def logout_user(request):
 @login_required(login_url='login')
 def mixmatch(request):
     category_filter = request.GET.get('category')
+    outfits = None
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
-        if category_filter and category_filter != "All":
-            clothing = clothing.filter(category__name__iexact=category_filter)
+        if category_filter == 'Outfits':
+            outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
+            clothing = Clothing.objects.none()
+        elif category_filter and category_filter != "All":
+            clothing = clothing.filter(categorynameiexact=category_filter)
     else:
         clothing = Clothing.objects.none()
     categories = Category.objects.all()
     context = {
         'clothing': clothing,
         'categories': categories,
-        'selected_category': category_filter or 'All'
+        'selected_category': category_filter or 'All',
+        'outfits': outfits,
     }
     return render(request, 'base/mixmatch.html', context)
 
@@ -110,6 +118,18 @@ def wardrobe(request):
 
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
+        clothing_json = pyjson.dumps([
+            {
+                'id': item.id,
+                'name': item.name,
+                'image': item.image.url,
+                'is_favorite': item.isFavorite,
+                'brand': item.brand,
+                'image_url': item.image.url,
+                'description': item.description,
+            }
+            for item in clothing
+        ], cls=DjangoJSONEncoder)
 
         if is_favorite: 
             clothing = Clothing.objects.filter(user=request.user, isFavorite = True)
@@ -120,11 +140,12 @@ def wardrobe(request):
             clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()
-    categories = Category.objects.all()
+    categories = Category.objects.all().values('id', 'name')
     
     context = {
         'clothing': clothing,
-        'categories': categories,
+        'clothing_json': clothing_json,
+        'categories': list(categories),
         'selected_category': category_filter or 'All',
         'outfits': outfits,
         'is_favorite_selected' : is_favorite
@@ -194,3 +215,35 @@ def edit_outfit_name(request, pk):
             outfit.save()
         return redirect('wardrobe')
     return redirect('wardrobe')
+
+@login_required(login_url='login')
+def edit_clothing(request, pk):
+    clothing = get_object_or_404(Clothing, pk=pk, user=request.user)
+    if request.method == 'POST':
+        form = addClothingForm(request.POST, request.FILES, instance=clothing)
+        if form.is_valid():
+            form.save()
+            return redirect('wardrobe')  # Change this to your actual wardrobe view
+    else:
+        form = addClothingForm(instance=clothing)
+    return render(request, 'base/wardrobe.html', {'form': form})
+
+@require_POST
+def delete_clothing(request, pk):
+    clothing = get_object_or_404(Clothing, pk=pk, user=request.user)
+    clothing.delete()
+    return JsonResponse({'success': True})
+
+@require_POST
+@login_required
+def update_clothing(request, pk):
+    clothing = get_object_or_404(Clothing, pk=pk, user=request.user)
+    form = addClothingForm(request.POST, request.FILES, instance=clothing)
+
+    if form.is_valid():
+        form.save()
+        return JsonResponse({'success': True})
+    else:
+        print(form.errors)
+
+    return JsonResponse({'success': False, 'errors': form.errors}, status=400)

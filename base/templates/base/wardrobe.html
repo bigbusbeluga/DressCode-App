@@ -34,11 +34,11 @@ Wardrobe - DressCode
         <div id="clothing-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% if selected_category == 'Outfits' %}
             {% for outfit in outfits %}
-            <div class="clothing-card border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer" onclick="openOutfitModal('{{ outfit.id }}')">
+            <div class="clothing-card border-gray-500 p-4 rounded-lg shadow-md hover:shadow-xl transition relative cursor-pointer" onclick="openOutfitModal('{{ outfit.id }}')">
               <h4 class="text-sm font-semibold mb-2">{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}</h4>
               <div class="flex flex-wrap gap-1 justify-center mb-2">
                 {% for clothing in outfit.clothes.all %}
-                  <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-10 h-10 object-cover rounded border">
+                  <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-10 h-10 object-contain rounded shadow-sm">
                 {% endfor %}
               </div>
               <span class="text-xs text-gray-500">{{ outfit.clothes.count }} items</span>
@@ -50,19 +50,19 @@ Wardrobe - DressCode
                 <form method="post" action="{% url 'edit_outfit_name' outfit.id %}" class="mb-4">
                   {% csrf_token %}
                   <div class="flex items-center gap-2">
-                    <input type="text" name="name" value="{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}" class="border rounded px-2 py-1 text-lg font-semibold w-full" placeholder="Enter outfit name" />
-                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Save Name</button>
+                    <input type="text" name="name" value="{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}" class="border-gray-500 shadow-sm rounded px-2 py-1 text-lg font-semibold w-full" placeholder="Enter outfit name" />
+                    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 cursor-pointer">Save</button>
                   </div>
                 </form>
                 <div class="flex flex-wrap gap-2 justify-center mb-4">
                   {% for clothing in outfit.clothes.all %}
-                    <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-24 h-24 object-cover rounded border">
+                    <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-24 h-24 object-contain rounded shadow-sm">
                   {% endfor %}
                 </div>
                 <form method="post" action="{% url 'edit_outfit_date' outfit.id %}" class="mt-2 flex items-center gap-2">
                   {% csrf_token %}
-                  <input type="date" name="date" value="{{ outfit.date|date:'Y-m-d' }}" class="border rounded px-2 py-1 text-sm" />
-                  <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-xs">Set Date</button>
+                  <input type="date" name="date" value="{{ outfit.date|date:'Y-m-d' }}" class="border-gray-500 rounded px-2 py-1 text-sm" />
+                  <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-xs hover:bg-blue-600 cursor-pointer">Schedule Outfit</button>
                 </form>
                 <button type="button" onclick="closeOutfitModal('{{ outfit.id }}')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,13 +76,16 @@ Wardrobe - DressCode
             {% endfor %}
           {% else %}
             {% for item in clothing %}
-            <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
-            <!-- Delete Button triggers modal -->
-            <button type="button" onclick="openModal('{{ item.id }}')" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div class="border-gray-500 p-4 rounded-lg shadow-md hover:shadow-xl transition relative cursor-pointer" 
+                data-id="{{ item.id }}"
+                data-name="{{ item.name }}"
+                data-category="{{ item.category }}"
+                data-image="{{ item.image.url }}"
+                data-isFavorite="{{ item.isFavorite }}"
+                data-description="{{ item.description }}"
+                data-brand="{{ item.brand }}"
+                onclick="openClothingModalFromElement(this)"
+            >
             <!-- Delete Modal -->
             <div id="delete-modal-{{ item.id }}" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
               <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative transform scale-95 opacity-0 transition-all duration-300" id="modal-content-{{ item.id }}">
@@ -102,27 +105,6 @@ Wardrobe - DressCode
                 </button>
               </div>
             </div>
-            <script>
-            function openModal(id) {
-              const modal = document.getElementById('delete-modal-' + id);
-              const content = document.getElementById('modal-content-' + id);
-              modal.classList.remove('hidden');
-              modal.classList.add('opacity-100');
-              content.classList.remove('scale-95', 'opacity-0');
-              content.classList.add('scale-100', 'opacity-100');
-            }
-            function closeModal(id) {
-              const modal = document.getElementById('delete-modal-' + id);
-              const content = document.getElementById('modal-content-' + id);
-              modal.classList.remove('opacity-100');
-              content.classList.remove('scale-100', 'opacity-100');
-              content.classList.add('scale-95', 'opacity-0');
-              modal.classList.add('hidden');
-            }
-            document.querySelectorAll('[id^="delete-modal-"]').forEach(function(modal) {
-              modal.classList.remove('opacity-100');
-            });
-            </script>
             <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-contain mb-2">
             <h4 class="text-sm font-semibold">{{ item.name }}</h4>
             <p class="text-xs text-gray-500">{{ item.category.name }}</p>
@@ -135,16 +117,214 @@ Wardrobe - DressCode
           {% endfor %}
           {% endif %}
         </div>
-        <script>
-        function openOutfitModal(id) {
-          document.getElementById('outfit-modal-' + id).classList.remove('hidden');
-        }
-        function closeOutfitModal(id) {
-          document.getElementById('outfit-modal-' + id).classList.add('hidden');
-        }
-        </script>
       </section>
     </div>
   </div>
 </div>
+
+<div id="clothingModal" class="fixed inset-0 flex items-center justify-center z-50 bg-white/10 shadow-xl backdrop-blur-md bg-opacity-50 hidden">
+  <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+    <button onclick="closeClothingModal()" class="absolute top-3 right-3 text-gray-400 hover:text-red-500">&times;</button>
+    
+    <!-- Modal Content Area -->
+    <div id="modalViewMode" class="flex flex-col items-center text-center">
+      <h2 id="modalClothingName" class="text-xl font-semibold"></h2>
+      <p id="modalClothingCategory" class="text-md font-semibold text-gray-400 mb-2"></p>
+      <img id="modalClothingImage" src="" alt="" class="w-4xl h-4xl object-cover my-3 rounded">
+      <p id="modalClothingBrand" class="text-sm text-gray-600"></p>
+      <p id="modalClothingDesc" class="text-sm text-gray-500 mb-4"></p>
+
+      <!-- Buttons -->
+      <div class="flex justify-between space-x-2">
+        <button onclick="editClothing()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+        <button onclick="deleteClothing()" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+        <button id="save-button" onclick="saveClothing()" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Save</button>
+      </div>
+    </div>
+
+    <!-- Edit Mode -->
+    <form id="modalEditForm" class="space-y-2 hidden" enctype="multipart/form-data">
+      <input type="hidden" id="csrfToken" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+      <div class="mb-4">
+        <img id="imageWardrobePreview" src="#" alt="Image Preview" class="w-full h-48 object-contain rounded hidden">
+      </div>
+      <input type="file" name="image" id="imageWardrobeInput" accept="image/*" class="sr-only">
+      <label for="imageWardrobeInput" class="cursor-pointer inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700">
+        Choose Image
+      </label>
+      <input type="text" id="editName" name="name" class="w-full border rounded p-2" placeholder="Name">
+      <input type="text" id="editBrand" name="brand" class="w-full border rounded p-2" placeholder="Brand">
+      <textarea id="editDescription" name="description" class="w-full border rounded p-2" placeholder="Description"></textarea>
+
+
+      <select id="editCategory" name="category" class="w-full border rounded p-2">
+        {% for category in categories %}
+          <option value="{{ category.id }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="flex items-center space-x-2 mb-4">
+        <input type="checkbox" name="isFavorite" class="form-checkbox">
+        <span class="text-sm">Mark as favorite</span>
+      </label>
+
+      <div class="flex justify-between pt-4">
+        <button type="button" onclick="cancelEdit()" class="bg-gray-300 px-3 py-1 rounded">Cancel</button>
+        <button type="button" onclick="saveClothing()" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openOutfitModal(id) {
+    document.getElementById('outfit-modal-' + id).classList.remove('hidden');
+  }
+
+  function closeOutfitModal(id) {
+    document.getElementById('outfit-modal-' + id).classList.add('hidden');
+  }
+
+  function openModal(id) {
+    const modal = document.getElementById('delete-modal-' + id);
+    const content = document.getElementById('modal-content-' + id);
+    modal.classList.remove('hidden');
+    modal.classList.add('opacity-100');
+    content.classList.remove('scale-95', 'opacity-0');
+    content.classList.add('scale-100', 'opacity-100');
+  }
+
+  function closeModal(id) {
+    const modal = document.getElementById('delete-modal-' + id);
+    const content = document.getElementById('modal-content-' + id);
+    modal.classList.remove('opacity-100');
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    modal.classList.add('hidden');
+  }
+
+  document.querySelectorAll('[id^="delete-modal-"]').forEach(function(modal) {
+    modal.classList.remove('opacity-100');
+  });
+
+  function openClothingModalFromElement(el) {
+    window.currentClothingId = el.dataset.id;
+    const clothing = {
+        id: el.dataset.id,
+        name: el.dataset.name,
+        category: el.dataset.category,
+        description: el.dataset.description,
+        brand: el.dataset.brand,
+        isFavorite: el.dataset.isFavorite,
+        image_url: el.dataset.image,
+    };
+
+    openClothingModal(clothing);
+  }
+
+  function openClothingModal(clothing) {
+    document.getElementById('save-button').classList.add('hidden');
+
+    document.getElementById('modalViewMode').classList.remove('hidden');
+    document.getElementById('modalEditForm').classList.add('hidden');
+    document.getElementById('clothingModal').classList.remove('hidden');
+
+    document.getElementById('modalClothingName').innerText = clothing.name;
+    document.getElementById('modalClothingCategory').innerText = clothing.category;
+    document.getElementById('modalClothingBrand').innerText = clothing.brand;
+    document.getElementById('modalClothingDesc').innerText = clothing.description;
+    document.getElementById('modalClothingImage').src = clothing.image_url;
+
+    document.getElementById('editName').value = clothing.name;
+    document.getElementById('editBrand').value = clothing.brand;
+    document.getElementById('editDescription').value = clothing.description;
+    document.getElementById('editCategory').value = clothing.category;
+  }
+
+  function closeClothingModal() {
+    document.getElementById('clothingModal').classList.add('hidden');
+  }
+
+  function deleteClothing() {
+    document.getElementById('clothingModal').classList.add('hidden');
+    openModal(window.currentClothingId);
+  }
+
+  function editClothing() {
+    document.getElementById('save-button').classList.remove('hidden');
+    document.getElementById('modalViewMode').classList.add('hidden');
+    document.getElementById('modalEditForm').classList.remove('hidden');
+  }
+
+  function cancelEdit() {
+    document.getElementById('save-button').classList.add('hidden');
+    document.getElementById('modalViewMode').classList.remove('hidden');
+    document.getElementById('modalEditForm').classList.add('hidden');
+}
+
+  function saveClothing() {
+    const formData = new FormData();
+    console.log('Category ID:', document.getElementById('editCategory').value);
+    formData.append('name', document.getElementById('editName').value);
+    formData.append('brand', document.getElementById('editBrand').value);
+    formData.append('description', document.getElementById('editDescription').value);
+    formData.append('category', document.getElementById('editCategory').value);
+    const image = document.getElementById('imageWardrobeInput');
+    if (image.files.length > 0) {
+      formData.append('image', image.files[0]);
+    }
+    formData.append('csrfmiddlewaretoken', document.getElementById('csrfToken').value);
+
+    fetch(`/clothing/${window.currentClothingId}/update/`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      // Always try to parse JSON, even on error
+      return response.json().then(data => {
+        if (!response.ok) {
+          // Throw with server validation errors
+          throw { status: response.status, data };
+        }
+        return data;
+      });
+    })
+    .then(data => {
+      if (data.success) {
+        closeClothingModal();
+        window.location.reload();
+      } else {
+        alert("Failed to save clothing item.");
+        console.error("Form errors:", data.errors);
+      }
+    })
+    .catch(error => {
+      if (error.data && error.data.errors) {
+        console.error("Validation errors:", error.data.errors);
+        alert("Validation error: " + JSON.stringify(error.data.errors));
+      } else {
+        console.error("Error saving clothing:", error);
+      }
+    });
+  }
+
+  const imageWardrobeInput = document.getElementById('imageWardrobeInput');
+  const imageWardrobePreview = document.getElementById('imageWardrobePreview');
+
+  imageWardrobeInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (file) {
+          imageWardrobePreview.src = URL.createObjectURL(file);
+          imageWardrobePreview.classList.remove('hidden');
+      } else {
+          imageWardrobePreview.classList.add('hidden');
+          imageWardrobePreview.src = '#';
+      }
+  });
+</script>
+
+<script id="clothing-data" type="application/json">
+  {{ clothing_json|json_script:"clothing-data" }}
+</script>
+
 {% endblock %}

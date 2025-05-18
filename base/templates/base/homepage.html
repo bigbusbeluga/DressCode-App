@@ -88,15 +88,6 @@ Wardrobe - DressCode
   </div>
 </div>
 
-<!-- Upload Button -->
-<div class="fixed bottom-4 right-4 z-50">
-  <a href="{% url 'add-Clothing' %}" class="bg-blue-200 text-blue-600 p-3 rounded-full hover:bg-blue-300 shadow-lg" title="Upload New Clothing">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"></path>
-    </svg>
-  </a>
-</div>
-
 <script>
 const outfits = {{ outfits_json|safe }};
 
