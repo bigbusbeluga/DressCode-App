@@ -8,7 +8,9 @@ from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
 from .models import Clothing, Category
-from .forms import SingUpForm, addClothingForm
+from .forms import SingUpForm, addClothingForm, ClothingForm
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
 
 def landing(request):
     return render(request, 'base/landing.html')
@@ -109,3 +111,19 @@ def deleteClothing(request, pk):
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
+@csrf_protect  # or use CSRF middleware
+def upload_clothing(request):
+    if request.method == 'POST':
+        form = ClothingForm(request.POST, request.FILES)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.user = request.user  # if auth enabled
+            item.save()
+            return JsonResponse({'status': 'success', 'item_id': item.id})
+        else: 
+            print(form.errors)
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+    else: 
+        print(form.errors)
+        return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+        

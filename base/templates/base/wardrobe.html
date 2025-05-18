@@ -30,9 +30,9 @@ Wardrobe - DressCode
     <!-- Inventory Grid -->
       <section class="flex-1">
         <h3 class="text-lg font-medium mb-4">{{ selected_category }} Items</h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div id='clothing-list' class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% for item in clothing %}
-          <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
+          <div class="clothing-card border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
             <a href="{% url 'delete-Clothing' item.id %}" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
