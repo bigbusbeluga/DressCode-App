@@ -10,7 +10,11 @@ from django.contrib.auth.decorators import login_required
 from .models import Clothing, Category, Outfit
 from .forms import SingUpForm, addClothingForm
 from django.http import JsonResponse
-import json
+from django.utils import timezone
+from django.core.serializers.json import DjangoJSONEncoder
+import json as pyjson
+import calendar
+from datetime import datetime
 
 def landing(request):
     return render(request, 'base/landing.html')
@@ -18,8 +22,38 @@ def landing(request):
 def home(request):
     return render(request, 'base/base.html')
 
+@login_required(login_url='login')
 def homepage(request):
-    return render(request, 'base/homepage.html')
+    today = timezone.now().date()
+    current_month = today.month
+    current_year = today.year
+
+    # Calculate calendar days for the current month
+    cal = calendar.monthcalendar(current_year, current_month)
+    calendar_days = []
+    for week in cal:
+        for day in week:
+            calendar_days.append(day if day != 0 else None)
+
+    # Fetch outfits for the user
+    outfits = Outfit.objects.filter(user=request.user, date__isnull=False)
+    outfits_json = [
+        {
+            'id': o.id,
+            'date': o.date.strftime('%Y-%m-%d') if o.date else None,
+            'clothes': [c.image.url for c in o.clothes.all()],
+            'accessories': [c.image.url for c in o.clothes.all() if c.category.name.lower() in ['accessories', 'jewelry', 'hats', 'socks', 'shoes']],
+        } for o in outfits
+    ]
+
+    context = {
+        'today': today,
+        'current_month': current_month,
+        'current_year': current_year,
+        'calendar_days': calendar_days,
+        'outfits_json': pyjson.dumps(outfits_json, cls=DjangoJSONEncoder),
+    }
+    return render(request, 'base/homepage.html', context)
 
 def signup(request):
     if request.method == "POST":
@@ -104,7 +138,7 @@ def addClothing(request):
         form = addClothingForm(request.POST, request.FILES)
         if form.is_valid():
             clothing = form.save(commit=False)
-            clothing.user = request.user  # Assign the current user
+            clothing.user = request.user
             clothing.save()
             return redirect('mixmatch')
     else:
@@ -117,7 +151,7 @@ def deleteClothing(request, pk):
     clothing = get_object_or_404(Clothing, id=pk, user=request.user)
     if request.method == "POST":
         clothing.delete()
-        return redirect('wardrobe')  # Redirect to mixmatch after deletion
+        return redirect('wardrobe')
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
@@ -128,14 +162,22 @@ def saveOutfit(request):
         image_urls = data.get('images', [])
         if not image_urls:
             return JsonResponse({'success': False, 'error': 'No images provided.'})
-        # Find Clothing objects by image URL
         clothing_items = Clothing.objects.filter(user=request.user, image__in=[url.replace(request.build_absolute_uri('/media/'), '') for url in image_urls])
         if not clothing_items.exists():
             return JsonResponse({'success': False, 'error': 'No matching clothing found.'})
-        # Create Outfit object
         outfit = Outfit.objects.create(user=request.user)
         outfit.clothes.set(clothing_items)
         outfit.save()
         return JsonResponse({'success': True, 'count': clothing_items.count()})
     return JsonResponse({'success': False, 'error': 'Invalid request.'})
 
+@login_required(login_url='login')
+def edit_outfit_date(request, pk):
+    outfit = get_object_or_404(Outfit, pk=pk, user=request.user)
+    if request.method == 'POST':
+        date = request.POST.get('date')
+        if date:
+            outfit.date = date
+            outfit.save()
+        return redirect('wardrobe')
+    return redirect('wardrobe')

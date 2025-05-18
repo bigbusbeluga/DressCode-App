@@ -26,6 +26,7 @@ class Outfit(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     clothes = models.ManyToManyField(Clothing, related_name='outfits')
+    date = models.DateField(blank=True, null=True)  # New attribute for scheduling
 
     def __str__(self):
         return self.name or f"Outfit {self.pk}"
