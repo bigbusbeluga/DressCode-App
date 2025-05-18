@@ -40,7 +40,7 @@
 
     {% block upload %}
     <button onclick="openUploadModal()"
-        class="fixed bottom-7 right-7 bg-cyan-50 hover:bg-cyan-100 text-gray-700 text-sm font-medium p-5 rounded-full shadow-lg z-50 transition-all">
+        class="fixed bottom-7 right-7 bg-cyan-50 hover:bg-cyan-100 cursor-pointer text-gray-700 text-sm font-medium p-5 rounded-full shadow-lg z-50 transition-all ">
         <img src="../static/images/upload.svg" alt="" class="w-5 object-contain">
     </button>
 
@@ -51,7 +51,7 @@
     
         <h2 class="text-xl font-semibold mb-4">Upload Clothing Item</h2>
         <!-- Your upload form goes here -->
-        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" method="POST" enctype="multipart/form-data" action="{% url 'add-Clothing' %}">
             {% csrf_token %}
           
             <div class="mb-4">
@@ -78,7 +78,7 @@
               <span class="text-sm">Mark as favorite</span>
             </label>
           
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white py-2 rounded">
               Upload
             </button>
           </form>
@@ -114,43 +114,5 @@
             imagePreview.classList.add('hidden');
             imagePreview.src = '#';
         }
-    });
-
-    document.getElementById('uploadForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-
-        fetch('/upload/', {
-            method: 'POST',
-            body: formData,
-            headers: {
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-            }
-        })
-            .then(res => {
-            if (!res.ok) throw new Error('Upload failed');
-            return res.json();
-            })
-            .then(data => {
-            console.log('Success:', data);
-            
-            const newItem = document.createElement('div');
-            newItem.className = 'clothing-card'; // match your styling
-            newItem.innerHTML = `
-                <img src="/media/clothing_images/default.jpg" alt="${formData.get('name')}" />
-                <h3>${formData.get('name')}</h3>
-                <p>${formData.get('brand')}</p>
-                <p>${formData.get('description')}</p>
-            `;
-
-            document.getElementById('clothing-list').prepend(newItem);
-            
-            closeUploadModal();
-            })
-            .catch(err => {
-            console.error(err);
-            alert('Upload failed');
-        });
     });
 </script>

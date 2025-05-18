@@ -7,17 +7,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
-<<<<<<< HEAD
-from .models import Clothing, Category
+from .models import Clothing, Category, Outfit
 from .forms import SingUpForm, addClothingForm, ClothingForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
-=======
-from .models import Clothing, Category, Outfit
-from .forms import SingUpForm, addClothingForm
-from django.http import JsonResponse
 import json
->>>>>>> refs/remotes/origin/main
 
 def landing(request):
     return render(request, 'base/landing.html')
@@ -77,10 +71,15 @@ def mixmatch(request):
 @login_required(login_url='login')
 def wardrobe(request):
     category_filter = request.GET.get('category')
+    is_favorite = request.GET.get('isFavorite') == 'True'
     outfits = None
+
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
-        if category_filter == 'Outfits':
+
+        if is_favorite: 
+            clothing = Clothing.objects.filter(user=request.user, isFavorite = True)
+        elif category_filter == 'Outfits':
             outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
             clothing = Clothing.objects.none()
         elif category_filter and category_filter != "All":
@@ -94,6 +93,7 @@ def wardrobe(request):
         'categories': categories,
         'selected_category': category_filter or 'All',
         'outfits': outfits,
+        'is_favorite_selected' : is_favorite
     }
     return render(request, 'base/wardrobe.html', context)
 
@@ -106,9 +106,9 @@ def addClothing(request):
         form = addClothingForm(request.POST, request.FILES)
         if form.is_valid():
             clothing = form.save(commit=False)
-            clothing.user = request.user  # Assign the current user
+            clothing.user = request.user
             clothing.save()
-            return redirect('mixmatch')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
     else:
         form = addClothingForm()
     context = {'form': form}
@@ -122,25 +122,7 @@ def deleteClothing(request, pk):
         return redirect('wardrobe')  # Redirect to mixmatch after deletion
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
-
-<<<<<<< HEAD
-@csrf_protect  # or use CSRF middleware
-def upload_clothing(request):
-    if request.method == 'POST':
-        form = ClothingForm(request.POST, request.FILES)
-        if form.is_valid():
-            item = form.save(commit=False)
-            item.user = request.user  # if auth enabled
-            item.save()
-            return JsonResponse({'status': 'success', 'item_id': item.id})
-        else: 
-            print(form.errors)
-            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
-    else: 
-        print(form.errors)
-        return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
         
-=======
 @login_required(login_url='login')
 def saveOutfit(request):
     if request.method == 'POST':
@@ -159,4 +141,3 @@ def saveOutfit(request):
         return JsonResponse({'success': True, 'count': clothing_items.count()})
     return JsonResponse({'success': False, 'error': 'Invalid request.'})
 
->>>>>>> refs/remotes/origin/main

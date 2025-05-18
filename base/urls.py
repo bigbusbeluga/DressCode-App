@@ -10,14 +10,13 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.login_user, name='login'),
     path('logout/', views.logout_user, name='logout'),
-    path('upload/', views.upload_clothing, name='upload_clothing'),
 
     path('wardrobe/', views.wardrobe, name='wardrobe'),
     path('laundry/', views.laundry, name='laundry'),
     
     path('mixmatch/', views.mixmatch, name='mixmatch'),
     path('wardrobe/deleteClothing/<str:pk>/', views.deleteClothing, name='delete-Clothing'),
-    path('mixmatch/addClothing/', views.addClothing, name='add-Clothing'),
+    path('addClothing/', views.addClothing, name='add-Clothing'),
     path('mixmatch/save-outfit/', views.saveOutfit, name='save-outfit'),
 
     

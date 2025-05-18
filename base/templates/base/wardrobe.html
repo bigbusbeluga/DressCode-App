@@ -17,7 +17,8 @@ Wardrobe - DressCode
     <aside class="w-full lg:w-1/5">
       <h2 class="text-lg font-semibold mb-4">Category</h2>
       <ul class="space-y-2">
-        <li><a href="?category=All" class="block px-4 py-2 rounded {% if selected_category == 'All' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">All</a></li>
+        <li><a href="?category=All" class="block px-4 py-2 rounded {% if selected_category == 'All' and not is_favorite_selected %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">All</a></li>
+        <li><a href="?isFavorite=True" class ="block px-4 py-2 rounded {% if is_favorite_selected %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Favorites</a></li>
         <li><a href="?category=Top" class="block px-4 py-2 rounded {% if selected_category == 'Top' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Tops</a></li>
         <li><a href="?category=Bottom" class="block px-4 py-2 rounded {% if selected_category == 'Bottom' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Bottoms</a></li>
         <li><a href="?category=Shoe" class="block px-4 py-2 rounded {% if selected_category == 'Shoe' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Footwear</a></li>
@@ -30,16 +31,10 @@ Wardrobe - DressCode
     <!-- Inventory Grid -->
       <section class="flex-1">
         <h3 class="text-lg font-medium mb-4">{{ selected_category }} Items</h3>
-<<<<<<< HEAD
-        <div id='clothing-list' class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {% for item in clothing %}
-          <div class="clothing-card border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
-            <a href="{% url 'delete-Clothing' item.id %}" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
-=======
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div id="clothing-list" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% if selected_category == 'Outfits' %}
             {% for outfit in outfits %}
-            <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer" onclick="openOutfitModal('{{ outfit.id }}')">
+            <div class="clothing-card border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer" onclick="openOutfitModal('{{ outfit.id }}')">
               <h4 class="text-sm font-semibold mb-2">{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}</h4>
               <div class="flex flex-wrap gap-1 justify-center mb-2">
                 {% for clothing in outfit.clothes.all %}
@@ -72,7 +67,6 @@ Wardrobe - DressCode
             <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
             <!-- Delete Button triggers modal -->
             <button type="button" onclick="openModal('{{ item.id }}')" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
->>>>>>> refs/remotes/origin/main
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
@@ -121,7 +115,7 @@ Wardrobe - DressCode
             <h4 class="text-sm font-semibold">{{ item.name }}</h4>
             <p class="text-xs text-gray-500">{{ item.category.name }}</p>
             {% if item.isFavorite %}
-              <span class="text-red-500 text-xl">♥</span>
+              <span class="text-xl">❤️</span>
             {% endif %}
           </div>
           {% empty %}
