@@ -1,5 +1,8 @@
-{% extends 'base/base.html' %}
+{% extends 'main.html' %}
 {% load static %}
+
+{% block sidebar %}
+{% endblock %}
 
 {% block title %}DressCode{% endblock %}
 
@@ -18,8 +21,8 @@
             </a>
         </div>
 
-        <div class="hidden lg:flex gap-4 absolute bottom-0 right-0">
-            <img src="{% static 'images/hero.png' %}" alt="Models" class="w-[800px]">
+        <div class="hidden lg:flex gap-4 relative bottom-0 right-0">
+            <img src="{% static 'images/hero.png' %}" alt="Models" class="w-[700px]">
         </div>
     </section>
 {% endblock %}

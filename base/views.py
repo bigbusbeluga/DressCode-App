@@ -7,14 +7,19 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
-from .models import Clothing, Category
+from .models import Clothing, Category, Outfit
 from .forms import SingUpForm, addClothingForm
+from django.http import JsonResponse
+import json
+
+def landing(request):
+    return render(request, 'base/landing.html')
 
 def home(request):
     return render(request, 'base/base.html')
 
-def homee(request):
-    return render(request, 'base/home.html')
+def homepage(request):
+    return render(request, 'base/homepage.html')
 
 def signup(request):
     if request.method == "POST":
@@ -43,23 +48,35 @@ def login_user(request):
 
 def logout_user(request):
     logout(request)
-    return redirect('home')
+    return redirect('landing')
     
 @login_required(login_url='login')
 def mixmatch(request):
+    category_filter = request.GET.get('category')
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
+        if category_filter and category_filter != "All":
+            clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()  # Show nothing for anonymous users
-    context = {'clothing': clothing}
+    categories = Category.objects.all()
+    context = {
+        'clothing': clothing,
+        'categories': categories,
+        'selected_category': category_filter or 'All'
+    }
     return render(request, 'base/mixmatch.html', context)
 
 @login_required(login_url='login')
 def wardrobe(request):
     category_filter = request.GET.get('category')
+    outfits = None
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
-        if category_filter and category_filter != "All":
+        if category_filter == 'Outfits':
+            outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
+            clothing = Clothing.objects.none()
+        elif category_filter and category_filter != "All":
             clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()
@@ -68,7 +85,8 @@ def wardrobe(request):
     context = {
         'clothing': clothing,
         'categories': categories,
-        'selected_category': category_filter or 'All'
+        'selected_category': category_filter or 'All',
+        'outfits': outfits,
     }
     return render(request, 'base/wardrobe.html', context)
 
@@ -98,5 +116,21 @@ def deleteClothing(request, pk):
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
-def landing(request):
-    return render(request, 'base/landing.html')
+@login_required(login_url='login')
+def saveOutfit(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        image_urls = data.get('images', [])
+        if not image_urls:
+            return JsonResponse({'success': False, 'error': 'No images provided.'})
+        # Find Clothing objects by image URL
+        clothing_items = Clothing.objects.filter(user=request.user, image__in=[url.replace(request.build_absolute_uri('/media/'), '') for url in image_urls])
+        if not clothing_items.exists():
+            return JsonResponse({'success': False, 'error': 'No matching clothing found.'})
+        # Create Outfit object
+        outfit = Outfit.objects.create(user=request.user)
+        outfit.clothes.set(clothing_items)
+        outfit.save()
+        return JsonResponse({'success': True, 'count': clothing_items.count()})
+    return JsonResponse({'success': False, 'error': 'Invalid request.'})
+
