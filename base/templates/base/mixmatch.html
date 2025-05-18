@@ -257,5 +257,13 @@ document.getElementById('save-outfit-btn').addEventListener('click', function() 
         alert('An error occurred while saving the outfit. Check the console for details.');
     });
 });
+
+function openOutfitModal(id) {
+    document.getElementById('outfit-modal-' + id).classList.remove('hidden');
+}
+
+function closeOutfitModal(id) {
+    document.getElementById('outfit-modal-' + id).classList.add('hidden');
+}
 </script>
 {% endblock %}
