@@ -20,3 +20,12 @@ class Clothing(models.Model):
 
     def __str__(self):
         return self.name
+
+class Outfit(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    clothes = models.ManyToManyField(Clothing, related_name='outfits')
+
+    def __str__(self):
+        return self.name or f"Outfit {self.pk}"

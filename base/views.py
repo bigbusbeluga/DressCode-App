@@ -7,10 +7,17 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
+<<<<<<< HEAD
 from .models import Clothing, Category
 from .forms import SingUpForm, addClothingForm, ClothingForm
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
+=======
+from .models import Clothing, Category, Outfit
+from .forms import SingUpForm, addClothingForm
+from django.http import JsonResponse
+import json
+>>>>>>> refs/remotes/origin/main
 
 def landing(request):
     return render(request, 'base/landing.html')
@@ -70,9 +77,13 @@ def mixmatch(request):
 @login_required(login_url='login')
 def wardrobe(request):
     category_filter = request.GET.get('category')
+    outfits = None
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
-        if category_filter and category_filter != "All":
+        if category_filter == 'Outfits':
+            outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
+            clothing = Clothing.objects.none()
+        elif category_filter and category_filter != "All":
             clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()
@@ -81,7 +92,8 @@ def wardrobe(request):
     context = {
         'clothing': clothing,
         'categories': categories,
-        'selected_category': category_filter or 'All'
+        'selected_category': category_filter or 'All',
+        'outfits': outfits,
     }
     return render(request, 'base/wardrobe.html', context)
 
@@ -111,6 +123,7 @@ def deleteClothing(request, pk):
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
 
+<<<<<<< HEAD
 @csrf_protect  # or use CSRF middleware
 def upload_clothing(request):
     if request.method == 'POST':
@@ -127,3 +140,23 @@ def upload_clothing(request):
         print(form.errors)
         return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
         
+=======
+@login_required(login_url='login')
+def saveOutfit(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        image_urls = data.get('images', [])
+        if not image_urls:
+            return JsonResponse({'success': False, 'error': 'No images provided.'})
+        # Find Clothing objects by image URL
+        clothing_items = Clothing.objects.filter(user=request.user, image__in=[url.replace(request.build_absolute_uri('/media/'), '') for url in image_urls])
+        if not clothing_items.exists():
+            return JsonResponse({'success': False, 'error': 'No matching clothing found.'})
+        # Create Outfit object
+        outfit = Outfit.objects.create(user=request.user)
+        outfit.clothes.set(clothing_items)
+        outfit.save()
+        return JsonResponse({'success': True, 'count': clothing_items.count()})
+    return JsonResponse({'success': False, 'error': 'Invalid request.'})
+
+>>>>>>> refs/remotes/origin/main

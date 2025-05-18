@@ -5,8 +5,8 @@ Wardrobe - DressCode
 {% endblock %}
 {% block navbar %}
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="p-4 sm:ml-70 mt-8">
     <div class="p-8">
   <!-- Title -->
@@ -23,21 +23,100 @@ Wardrobe - DressCode
         <li><a href="?category=Shoe" class="block px-4 py-2 rounded {% if selected_category == 'Shoe' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Footwear</a></li>
         <li><a href="?category=Hat" class="block px-4 py-2 rounded {% if selected_category == 'Hat' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Hats</a></li>
         <li><a href="?category=Accessory" class="block px-4 py-2 rounded {% if selected_category == 'Accessory' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Accessories</a></li>
-      
+        <li><a href="?category=Outfits" class="block px-4 py-2 rounded {% if selected_category == 'Outfits' %}bg-blue-100{% else %}hover:bg-gray-100{% endif %}">Outfits</a></li>
       </ul>
     </aside>
 
     <!-- Inventory Grid -->
       <section class="flex-1">
         <h3 class="text-lg font-medium mb-4">{{ selected_category }} Items</h3>
+<<<<<<< HEAD
         <div id='clothing-list' class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {% for item in clothing %}
           <div class="clothing-card border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
             <a href="{% url 'delete-Clothing' item.id %}" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
+=======
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {% if selected_category == 'Outfits' %}
+            {% for outfit in outfits %}
+            <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer" onclick="openOutfitModal('{{ outfit.id }}')">
+              <h4 class="text-sm font-semibold mb-2">{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}</h4>
+              <div class="flex flex-wrap gap-1 justify-center mb-2">
+                {% for clothing in outfit.clothes.all %}
+                  <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-10 h-10 object-cover rounded border">
+                {% endfor %}
+              </div>
+              <span class="text-xs text-gray-500">{{ outfit.clothes.count }} items</span>
+            </div>
+            <!-- Outfit Modal -->
+            <div id="outfit-modal-{{ outfit.id }}" class="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50 hidden transition-opacity duration-300">
+              <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+                <h3 class="text-lg font-semibold mb-2">{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}</h3>
+                <div class="flex flex-wrap gap-2 justify-center mb-4">
+                  {% for clothing in outfit.clothes.all %}
+                    <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-24 h-24 object-cover rounded border">
+                  {% endfor %}
+                </div>
+                <button type="button" onclick="closeOutfitModal('{{ outfit.id }}')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            {% empty %}
+            <p class="col-span-full text-center text-gray-500">No outfits found.</p>
+            {% endfor %}
+          {% else %}
+            {% for item in clothing %}
+            <div class="border p-4 rounded-lg shadow hover:shadow-md transition relative cursor-pointer">
+            <!-- Delete Button triggers modal -->
+            <button type="button" onclick="openModal('{{ item.id }}')" class="absolute top-2 right-2 z-10 bg-white rounded-full p-1 shadow hover:bg-red-100 transition-opacity opacity-70 hover:opacity-100" title="Delete">
+>>>>>>> refs/remotes/origin/main
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </a>
+            </button>
+            <!-- Delete Modal -->
+            <div id="delete-modal-{{ item.id }}" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
+              <div class="bg-white rounded-lg shadow-lg p-6 w-80 relative transform scale-95 opacity-0 transition-all duration-300" id="modal-content-{{ item.id }}">
+                <h3 class="text-lg font-semibold mb-2">Delete Item</h3>
+                <p class="mb-4">Are you sure you want to delete <span class="font-bold">{{ item.name }}</span>?</p>
+                <div class="flex justify-end gap-2">
+                  <button type="button" onclick="closeModal('{{ item.id }}')" class="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 transition-colors duration-200">Cancel</button>
+                  <form method="post" action="{% url 'delete-Clothing' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600 transition-colors duration-200">Delete</button>
+                  </form>
+                </div>
+                <button type="button" onclick="closeModal('{{ item.id }}')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <script>
+            function openModal(id) {
+              const modal = document.getElementById('delete-modal-' + id);
+              const content = document.getElementById('modal-content-' + id);
+              modal.classList.remove('hidden');
+              modal.classList.add('opacity-100');
+              content.classList.remove('scale-95', 'opacity-0');
+              content.classList.add('scale-100', 'opacity-100');
+            }
+            function closeModal(id) {
+              const modal = document.getElementById('delete-modal-' + id);
+              const content = document.getElementById('modal-content-' + id);
+              modal.classList.remove('opacity-100');
+              content.classList.remove('scale-100', 'opacity-100');
+              content.classList.add('scale-95', 'opacity-0');
+              modal.classList.add('hidden');
+            }
+            document.querySelectorAll('[id^="delete-modal-"]').forEach(function(modal) {
+              modal.classList.remove('opacity-100');
+            });
+            </script>
             <img src="{{ item.image.url }}" alt="{{ item.name }}" class="w-full h-48 object-contain mb-2">
             <h4 class="text-sm font-semibold">{{ item.name }}</h4>
             <p class="text-xs text-gray-500">{{ item.category.name }}</p>
@@ -48,11 +127,18 @@ Wardrobe - DressCode
           {% empty %}
           <p class="col-span-full text-center text-gray-500">No items found.</p>
           {% endfor %}
+          {% endif %}
         </div>
+        <script>
+        function openOutfitModal(id) {
+          document.getElementById('outfit-modal-' + id).classList.remove('hidden');
+        }
+        function closeOutfitModal(id) {
+          document.getElementById('outfit-modal-' + id).classList.add('hidden');
+        }
+        </script>
       </section>
     </div>
   </div>
 </div>
-
-
 {% endblock %}
