@@ -6,4 +6,148 @@ Wardrobe - DressCode
 {% block navbar %}
 {% endblock %}
 {% block content %}
+<div class="flex flex-col sm:ml-64 p-6 min-h-screen bg-gray-50">
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col gap-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+      <h1 class="text-4xl font-bold">Good Morning, {{ username }}!</h1>
+      <div class="text-right">
+        <p class="text-lg font-semibold">{{ today|date:"l, F d, Y" }}</p>
+        <p id="real-time-clock" class="text-gray-500"></p>
+      </div>
+    </div>
+
+    <!-- Calendar and Scheduled Outfit -->
+    <div class="bg-white rounded-xl shadow p-6 flex flex-col md:flex-row gap-8">
+      <!-- Calendar -->
+      <div class="flex-1 flex flex-col items-center">
+        <div class="flex justify-between items-center w-full mb-4">
+          <button class="text-gray-500"><</button>
+          <h2 class="text-xl font-semibold">{{ today|date:"F Y" }}</h2>
+          <button class="text-gray-500">></button>
+        </div>
+        <div class="grid grid-cols-7 gap-2 text-center">
+          <div class="text-gray-500">Sun</div>
+          <div class="text-gray-500">Mon</div>
+          <div class="text-gray-500">Tues</div>
+          <div class="text-gray-500">Wed</div>
+          <div class="text-gray-500">Thurs</div>
+          <div class="text-gray-500">Fri</div>
+          <div class="text-gray-500">Sat</div>
+          {% for day in calendar_days %}
+            <div class="{% if day == today.day %}bg-pink-200 text-pink-600{% elif day %}bg-blue-100{% else %}text-gray-300{% endif %} rounded p-2 cursor-pointer" data-day="{{ day }}" data-date="{% if day %}{{ today.year }}-{{ today.month|stringformat:'02d' }}-{{ day|stringformat:'02d' }}{% endif %}">
+              {{ day|default:"" }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Scheduled Outfit -->
+      <div class="flex-1 flex flex-col items-center">
+        <h2 id="outfit-title" class="text-2xl font-bold mb-4 text-blue-500">Scheduled outfit on {{ today|date:"l, F d, Y" }}</h2>
+        <div id="outfit-images" class="flex gap-4 mb-4 justify-center">
+          <!-- Main clothing items -->
+        </div>
+        <div id="outfit-items" class="flex gap-4 flex-wrap justify-center">
+          <!-- Accessories -->
+        </div>
+        <button class="mt-4 bg-pink-200 text-pink-600 px-4 py-2 rounded hover:bg-pink-300">More Scheduled Outfits</button>
+      </div>
+    </div>
+
+    <!-- Stats, Laundry, Weather -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Your Stats -->
+      <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
+        <h3 class="text-xl font-semibold mb-2">Your Stats</h3>
+        <img src="{% static 'stats-image.png' %}" alt="Stats Image" class="h-24 mb-4">
+        <p>You have worn this outfit 5 times for the month of February!</p>
+      </div>
+
+      <!-- Laundry -->
+      <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
+        <h3 class="text-xl font-semibold mb-2">Laundry</h3>
+        <img src="{% static 'laundry-image.png' %}" alt="Laundry Image" class="h-24 mb-4">
+        <p>You got 10 clothes currently in your laundry. Want to check them out?</p>
+      </div>
+
+      <!-- Weather -->
+      <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
+        <h3 class="text-xl font-semibold mb-2">Weather</h3>
+        <div class="flex items-center gap-2 mb-4">
+          <img src="{% static 'weather-icon.png' %}" alt="Weather Icon" class="h-12">
+          <div>
+            <p class="text-2xl font-bold">35°</p>
+            <p class="text-gray-500">Partly Cloudy</p>
+          </div>
+        </div>
+        <p>Naga City</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Button -->
+<div class="fixed bottom-4 right-4 z-50">
+  <a href="{% url 'add-Clothing' %}" class="bg-blue-200 text-blue-600 p-3 rounded-full hover:bg-blue-300 shadow-lg" title="Upload New Clothing">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"></path>
+    </svg>
+  </a>
+</div>
+
+<script>
+const outfits = {{ outfits_json|safe }};
+
+function showOutfitForDate(dateStr) {
+  const outfit = outfits.find(o => o.date === dateStr);
+  const title = document.getElementById('outfit-title');
+  const imagesDiv = document.getElementById('outfit-images');
+  const itemsDiv = document.getElementById('outfit-items');
+
+  title.textContent = `Scheduled outfit on ${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`;
+  imagesDiv.innerHTML = '';
+  itemsDiv.innerHTML = '';
+  if (outfit) {
+    outfit.clothes.forEach(img => {
+      const el = document.createElement('img');
+      el.src = img;
+      el.className = 'h-24 object-contain rounded border';
+      imagesDiv.appendChild(el);
+    });
+    outfit.accessories.forEach(img => {
+      const el = document.createElement('img');
+      el.src = img;
+      el.className = 'h-12 object-contain rounded border';
+      itemsDiv.appendChild(el);
+    });
+  } else {
+    title.textContent = `No scheduled outfit on ${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`;
+    imagesDiv.innerHTML = '<span class="text-gray-400">No outfit scheduled.</span>';
+  }
+}
+
+// Make calendar days clickable
+document.querySelectorAll('.grid div[data-day]').forEach(day => {
+  day.addEventListener('click', function() {
+    const dateStr = this.getAttribute('data-date');
+    if (dateStr) {
+      showOutfitForDate(dateStr);
+    }
+  });
+});
+
+// Show outfit for the current date by default
+showOutfitForDate('{{ today|date:"Y-m-d" }}');
+
+// Real-time clock
+function updateClock() {
+  const clock = document.getElementById('real-time-clock');
+  const now = new Date();
+  clock.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
 {% endblock content %}
