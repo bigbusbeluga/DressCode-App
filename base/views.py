@@ -8,7 +8,7 @@ from django.contrib.auth import login as auth_login
 from django.forms import ModelForm
 from django.contrib.auth.decorators import login_required
 from .models import Clothing, Category, Outfit
-from .forms import SingUpForm, addClothingForm, ClothingForm
+from .forms import SingUpForm, addClothingForm
 from django.http import JsonResponse
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder

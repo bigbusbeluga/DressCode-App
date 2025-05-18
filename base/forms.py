@@ -32,8 +32,3 @@ class addClothingForm(ModelForm):
             'image': forms.ClearableFileInput(attrs={'class': 'w-full text-sm text-slate-500 rounded border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100'}),
             'category': forms.Select(attrs={'class': 'w-full rounded border px-4 py-2'}),
         }
-
-class ClothingForm(forms.ModelForm):
-    class Meta:
-        model = Clothing
-        fields = ['name', 'brand', 'category', 'description', 'isFavorite', 'image']

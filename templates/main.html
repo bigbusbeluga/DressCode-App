@@ -39,7 +39,7 @@
     {% endblock %}
 
     {% block upload %}
-    <button onclick="openUploadModal()"
+    <button onclick="openUploadModal()" aria-label="Upload Clothing Item"
         class="fixed bottom-7 right-7 bg-cyan-50 hover:bg-cyan-100 cursor-pointer text-gray-700 text-sm font-medium p-5 rounded-full shadow-lg z-50 transition-all ">
         <img src="../static/images/upload.svg" alt="" class="w-5 object-contain">
     </button>
@@ -99,7 +99,7 @@
         document.getElementById('uploadModal').classList.remove('hidden');
     }
     function closeUploadModal() {
-    document.getElementById('uploadModal').style.display = 'none';
+    document.getElementById('uploadModal').classList.add('hidden');
 }
 
     const imageInput = document.getElementById('imageInput');
