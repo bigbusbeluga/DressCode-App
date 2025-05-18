@@ -159,7 +159,7 @@ def deleteClothing(request, pk):
 @login_required(login_url='login')
 def saveOutfit(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
+        data = pyjson.loads(request.body)
         image_urls = data.get('images', [])
         if not image_urls:
             return JsonResponse({'success': False, 'error': 'No images provided.'})
