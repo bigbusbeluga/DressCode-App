@@ -22,48 +22,48 @@ Mix & Match - DressCode
             <button id="save-outfit-btn" class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
         </section>
 
-        <!-- Clothes Collection -->
-        <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
-            <div class="flex justify-between mb-4">
-                <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
-                    <a href="?category=All"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'All' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        ALL
-                    </a>
-                    <a href="?category=Outfits"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Outfits' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Outfits
-                    </a>
-                    <a href="?category=Top"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Top' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Tops
-                    </a>
-                    <a href="?category=Bottom"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Bottom' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Bottoms
-                    </a>
-                    <a href="?category=Shoe"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Shoe' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Shoes
-                    </a>
-                    <a href="?category=Hat"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Hat' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Hats
-                    </a>
-                    <a href="?category=Accessory"
-                       class="rounded-full px-4 py-1 border font-bold transition
-                              {% if selected_category == 'Accessory' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                        Accessories
-                    </a>
+            <!-- Clothes Collection -->
+            <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
+                <div class="flex justify-between mb-4">
+                    <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
+                        <a href="?category=All"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'All' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            ALL
+                        </a>
+                        <a href="?category=Outfits"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Outfits' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Outfits
+                        </a>
+                        <a href="?category=Top"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Top' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Tops
+                        </a>
+                        <a href="?category=Bottom"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Bottom' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Bottoms
+                        </a>
+                        <a href="?category=Shoe"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Shoe' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Shoes
+                        </a>
+                        <a href="?category=Hat"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Hat' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Hats
+                        </a>
+                        <a href="?category=Accessory"
+                           class="rounded-full px-4 py-1 border font-bold transition
+                                  {% if selected_category == 'Accessory' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                            Accessories
+                        </a>
+                    </div>
+                    <!-- <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a> -->
                 </div>
-                <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a>
-            </div>
 
             <!-- Search bar -->
             <div class="mb-4 relative">
