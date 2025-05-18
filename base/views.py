@@ -110,10 +110,15 @@ def mixmatch(request):
 @login_required(login_url='login')
 def wardrobe(request):
     category_filter = request.GET.get('category')
+    is_favorite = request.GET.get('isFavorite') == 'True'
     outfits = None
+
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
-        if category_filter == 'Outfits':
+
+        if is_favorite: 
+            clothing = Clothing.objects.filter(user=request.user, isFavorite = True)
+        elif category_filter == 'Outfits':
             outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
             clothing = Clothing.objects.none()
         elif category_filter and category_filter != "All":
@@ -127,6 +132,7 @@ def wardrobe(request):
         'categories': categories,
         'selected_category': category_filter or 'All',
         'outfits': outfits,
+        'is_favorite_selected' : is_favorite
     }
     return render(request, 'base/wardrobe.html', context)
 
@@ -141,7 +147,7 @@ def addClothing(request):
             clothing = form.save(commit=False)
             clothing.user = request.user
             clothing.save()
-            return redirect('mixmatch')
+            return redirect(request.META.get('HTTP_REFERER', '/'))
     else:
         form = addClothingForm()
     context = {'form': form}
@@ -155,7 +161,7 @@ def deleteClothing(request, pk):
         return redirect('wardrobe')
     context = {'clothing': clothing}
     return render(request, 'base/delete_clothing.html', context)
-
+        
 @login_required(login_url='login')
 def saveOutfit(request):
     if request.method == 'POST':
