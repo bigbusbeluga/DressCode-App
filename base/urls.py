@@ -18,6 +18,7 @@ urlpatterns = [
     path('wardrobe/deleteClothing/<str:pk>/', views.deleteClothing, name='delete-Clothing'),
     path('mixmatch/addClothing/', views.addClothing, name='add-Clothing'),
     path('mixmatch/save-outfit/', views.saveOutfit, name='save-outfit'),
+    path('wardrobe/edit-outfit-date/<int:pk>/', views.edit_outfit_date, name='edit-outfit-date'),
 
     
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
