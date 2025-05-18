@@ -64,7 +64,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
-            return redirect('mixmatch')
+            return redirect('homepage')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -76,7 +76,7 @@ def login_user(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('mixmatch')
+            return redirect('homepage')
         else:
             messages.error(request, 'Username or password is incorrect')
     else:
