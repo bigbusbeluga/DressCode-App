@@ -82,7 +82,7 @@ Mix & Match - DressCode
                onclick="openOutfitModal('{{ outfit.id }}')">
                <div class="flex flex-wrap gap-1 justify-center mb-2">
                   {% for clothing in outfit.clothes.all %}
-                  <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-10 h-10 object-cover rounded border">
+                  <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-10 h-10 object-cover rounded">
                   {% endfor %}
                </div>
                <h4 class="text-sm font-semibold mb-2 text-center">
@@ -92,22 +92,22 @@ Mix & Match - DressCode
             </div>
             <!-- Outfit Modal -->
             <div id="outfit-modal-{{ outfit.id }}" class="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50 hidden transition-opacity duration-300">
-               <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+               <div class="bg-white rounded-lg shadow-lg p-8 w-[40rem] relative">
                     <form method="post" action="{% url 'edit_outfit_name' outfit.id %}" class="mb-4">
                         {% csrf_token %}
                         <div class="flex items-center gap-2">
                             <input type="text" name="name" value="{% if outfit.name %}{{ outfit.name }}{% else %}Outfit {{ outfit.id }}{% endif %}" class="border rounded px-2 py-1 text-lg font-semibold w-full" placeholder="Enter outfit name" />
-                            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Save Name</button>
+                            <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-xl">Save</button>
                         </div>
-                  <div class="flex flex-wrap gap-2 justify-center mb-4">
+                  <div class="flex flex-wrap gap-4 justify-center mb-4">
                      {% for clothing in outfit.clothes.all %}
-                     <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-24 h-24 object-cover rounded border">
+                     <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-40 h-40 object-cover rounded">
                      {% endfor %}
                   </div>
                     <form method="post" action="{% url 'edit_outfit_date' outfit.id %}" class="mt-2 flex items-center gap-2">
                         {% csrf_token %}
                         <input type="date" name="date" value="{{ outfit.date|date:'Y-m-d' }}" class="border rounded px-2 py-1 text-sm" />
-                        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-xs">Set Date</button>
+                        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm">Schedule Outfit</button>
                     </form>
                   <button type="button" onclick="closeOutfitModal('{{ outfit.id }}')" class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors duration-200">
                      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
