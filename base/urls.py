@@ -23,5 +23,7 @@ urlpatterns = [
     path('edit-outfit-date/<int:pk>/', views.edit_outfit_date, name='edit_outfit_date'),
     path('edit-outfit-name/<int:pk>/', views.edit_outfit_name, name='edit_outfit_name'),
 
-    
+    path('clothing/<int:pk>/edit/', views.edit_clothing, name='edit_clothing'),
+    path('clothing/<int:pk>/delete/', views.delete_clothing, name='delete_clothing'),
+    path('clothing/<int:pk>/update/', views.update_clothing, name='update_clothing'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
