@@ -10,193 +10,204 @@ Mix & Match - DressCode
 {% block content %}
 {% include 'sidebar.html' %}
 
-    <main class="p-4 sm:ml-64 mt-8">
-        <h2 class="text-4xl font-bold mb-4 text-gray-800 pl-4">Outfit Canvas</h2>
-        <!-- Flex container for the two sections -->
-        <div class="flex gap-4">
-            <!-- Outfit Canvas -->
-            <section class="w-1/3 bg-white rounded-2xl p-4 flex flex-col items-center shadow-md border">
-                <div id="outfit-canvas" class="w-96 h-[510px] border-2 border-dashed border-red-300 rounded-xl p-4 flex flex-wrap justify-center items-center gap-4 bg-[#fefefe] shadow-md">
-                    <!-- Dynamically added clothes will appear here -->
-                </div>
-                <button id="save-outfit-btn" class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
-            </section>
+<main class="p-4 sm:ml-64 mt-8">
+    <h2 class="text-4xl font-bold mb-4 text-gray-800 pl-4">Outfit Canvas</h2>
+    <!-- Flex container for the two sections -->
+    <div class="flex gap-4">
+        <!-- Outfit Canvas -->
+        <section class="w-1/3 bg-white rounded-2xl p-4 flex flex-col items-center shadow-md border">
+            <div id="outfit-canvas" class="w-96 h-[510px] border-2 border-dashed border-red-300 rounded-xl p-4 flex flex-wrap justify-center items-center gap-4 bg-[#fefefe] shadow-md">
+                <!-- Dynamically added clothes will appear here -->
+            </div>
+            <button id="save-outfit-btn" class="mt-4 bg-pink-300 text-black rounded-full px-6 py-2 font-semibold">Save Outfit</button>
+        </section>
 
-            <!-- Clothes Collection -->
-            <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
-                <div class="flex justify-between mb-4">
-                    <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
-                        <a href="?category=All"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'All' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            ALL
-                        </a>
-                        <a href="?category=Outfits"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Outfits' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Outfits
-                        </a>
-                        <a href="?category=Top"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Top' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Tops
-                        </a>
-                        <a href="?category=Bottom"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Bottom' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Bottoms
-                        </a>
-                        <a href="?category=Shoe"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Shoe' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Shoes
-                        </a>
-                        <a href="?category=Hat"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Hat' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Hats
-                        </a>
-                        <a href="?category=Accessory"
-                           class="rounded-full px-4 py-1 border font-bold transition
-                                  {% if selected_category == 'Accessory' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
-                            Accessories
-                        </a>
-                    </div>
-                    <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a>
+        <!-- Clothes Collection -->
+        <section class="border flex-1 bg-[#e9f4ff] rounded-2xl p-4 overflow-y-auto shadow-md">
+            <div class="flex justify-between mb-4">
+                <div id="filter-buttons" class="flex gap-2 overflow-x-auto whitespace-nowrap">
+                    <a href="?category=All"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'All' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        ALL
+                    </a>
+                    <a href="?category=Outfits"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Outfits' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Outfits
+                    </a>
+                    <a href="?category=Top"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Top' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Tops
+                    </a>
+                    <a href="?category=Bottom"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Bottom' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Bottoms
+                    </a>
+                    <a href="?category=Shoe"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Shoe' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Shoes
+                    </a>
+                    <a href="?category=Hat"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Hat' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Hats
+                    </a>
+                    <a href="?category=Accessory"
+                       class="rounded-full px-4 py-1 border font-bold transition
+                              {% if selected_category == 'Accessory' %}bg-blue-700 text-white{% else %} text-black hover:bg-blue-100{% endif %}">
+                        Accessories
+                    </a>
                 </div>
+                <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a>
+            </div>
 
-                <!-- Search bar || ung filter function kau na lang mag define hahahah-->
-                <div class="mb-4 relative">
-                    <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-2xl pointer-events-none">search</span>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Search"
-                        class="w-full pl-10 pr-4 py-2 border border-gray-700 rounded-lg"
-                        onkeyup="filterClothes()"
-                    />
+            <!-- Search bar -->
+            <div class="mb-4 relative">
+                <span class="material-symbols-rounded absolute left-3 top-1/2 -translate-y-1/2 text-2xl pointer-events-none">search</span>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search"
+                    class="w-full pl-10 pr-4 py-2 border border-gray-700 rounded-lg"
+                    onkeyup="filterClothes()"
+                />
+            </div>
+
+            <div class="grid grid-cols-4 gap-4 max-h-[28rem] overflow-y-auto">
+                {% for item in clothing %}
+                <div class="bg-white p-2 rounded-xl shadow flex flex-col items-center"
+                     data-image-url="{{ item.image.url }}"
+                     data-name="{{ item.name|lower }}">
+                    <img src="{{ item.image.url }}" alt="Clothing" class="h-28 object-contain">
+                    <button onclick="addToCanvas('{{ item.image.url }}')" class="mt-2 text-[12px] bg-white border border-black px-2 py-1 rounded-md">Add</button>
                 </div>
-
-                <div class="grid grid-cols-4 gap-4 max-h-[28rem] overflow-y-auto">
-                    {% for item in clothing %}
-                    <div class="bg-white p-2 rounded-xl shadow flex flex-col items-center"
-                         data-image-url="{{ item.image.url }}"
-                         data-name="{{ item.name|lower }}">
-                        <img src="{{ item.image.url }}" alt="Clothing" class="h-28 object-contain">
-                        <button onclick="addToCanvas('{{ item.image.url }}')" class="mt-2 text-[12px] bg-white border border-black px-2 py-1 rounded-md">Add</button>
-                    </div>
-                    {% empty %}
-                    <p class="col-span-full text-center text-gray-500">No items found.</p>
-                    {% endfor %}
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Modal for item limit -->
-    <div id="limitModal" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
-      <div class="bg-white rounded-lg shadow-lg p-8 max-w-xs text-center">
-        <h3 class="text-lg font-bold mb-2">Limit Reached!</h3>
-        <p class="mb-4">You can only add up to 8 items to the outfit canvas.</p>
-        <button onclick="closeLimitModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">OK</button>
-      </div>
+                {% empty %}
+                <p class="col-span-full text-center text-gray-500">No items found.</p>
+                {% endfor %}
+            </div>
+        </section>
     </div>
+</main>
 
-    <script>
-        function addToCanvas(imageUrl) {
-            const canvas = document.getElementById('outfit-canvas');
-            const currentItems = canvas.querySelectorAll('div').length;
-            if (currentItems >= 8) {
-                showLimitModal();
-                return;
-            }
+<!-- Modal for item limit -->
+<div id="limitModal" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
+  <div class="bg-white rounded-lg shadow-lg p-8 max-w-xs text-center">
+    <h3 class="text-lg font-bold mb-2">Limit Reached!</h3>
+    <p class="mb-4">You can only add up to 8 items to the outfit canvas.</p>
+    <button onclick="closeLimitModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">OK</button>
+  </div>
+</div>
 
-            // para ma-hide sa collection ung item na na-add sa canvas
-            const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
-            if (collectionItem) {
-                collectionItem.style.display = 'none';
-            }
+<script>
+function addToCanvas(imageUrl) {
+    const canvas = document.getElementById('outfit-canvas');
+    const currentItems = canvas.querySelectorAll('div').length;
+    if (currentItems >= 8) {
+        showLimitModal();
+        return;
+    }
 
-            // container for the image and delete button
-            const container = document.createElement('div');
-            container.className = 'relative inline-block m-2';
+    // Hide the item in the collection when added to canvas
+    const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
+    if (collectionItem) {
+        collectionItem.style.display = 'none';
+    }
 
-            // para ma-create image sa canvas
-            const img = document.createElement('img');
-            img.src = imageUrl;
-            img.className = 'h-24';
+    // Container for the image and delete button
+    const container = document.createElement('div');
+    container.className = 'relative inline-block m-2';
 
-            // create delete button
-            const btn = document.createElement('button');
-            btn.innerHTML = '<span class="material-symbols-rounded text-xs text-red-400">close</span>';
-            btn.type = 'button';
-            btn.className = 'absolute top-0 right-0 bg-white rounded-full w-7 h-7 shadow hover:bg-red-100 p-0.5';
-            btn.onclick = function() {
-                container.remove();
-                // para ma-show ulit ung item sa collection
-                const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
-                if (collectionItem) {
-                    collectionItem.style.display = '';
-                }
-            };
+    // Create image in canvas
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.className = 'h-24';
 
-            // append image and button sa container
-            container.appendChild(img);
-            container.appendChild(btn);
-
-            // add container sa canvas
-            document.getElementById('outfit-canvas').appendChild(container);
+    // Create delete button
+    const btn = document.createElement('button');
+    btn.innerHTML = '<span class="material-symbols-rounded text-xs text-red-400">close</span>';
+    btn.type = 'button';
+    btn.className = 'absolute top-0 right-0 bg-white rounded-full w-7 h-7 shadow hover:bg-red-100 p-0.5';
+    btn.onclick = function() {
+        container.remove();
+        // Show the item in the collection again
+        const collectionItem = document.querySelector(`[data-image-url="${imageUrl}"]`);
+        if (collectionItem) {
+            collectionItem.style.display = '';
         }
+    };
 
-        function showLimitModal() {
-            document.getElementById('limitModal').classList.remove('hidden');
+    // Append image and button to container
+    container.appendChild(img);
+    container.appendChild(btn);
+
+    // Add container to canvas
+    document.getElementById('outfit-canvas').appendChild(container);
+}
+
+function showLimitModal() {
+    document.getElementById('limitModal').classList.remove('hidden');
+}
+function closeLimitModal() {
+    document.getElementById('limitModal').classList.add('hidden');
+}
+
+function filterClothes() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+    const collectionItems = document.querySelectorAll('.grid > div');
+
+    collectionItems.forEach(item => {
+        const imgSrc = item.getAttribute('data-name').toLowerCase();
+        if (imgSrc.includes(filter)) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
         }
-        function closeLimitModal() {
-            document.getElementById('limitModal').classList.add('hidden');
-        }
+    });
+}
 
-        function filterClothes() {
-            const input = document.getElementById('searchInput');
-            const filter = input.value.toLowerCase();
-            const collectionItems = document.querySelectorAll('.grid > div');
+document.getElementById('save-outfit-btn').addEventListener('click', function() {
+    const canvas = document.getElementById('outfit-canvas');
+    const images = Array.from(canvas.querySelectorAll('img')).map(img => img.src);
+    if (images.length === 0) {
+        alert('Add at least one item to save an outfit.');
+        return;
+    }
 
-            collectionItems.forEach(item => {
-                const imgSrc = item.getAttribute('data-name').toLowerCase();
-                if (imgSrc.includes(filter)) {
-                    item.style.display = '';
-                } else {
-                    item.style.display = 'none';
-                }
+    // Strip the domain and '/media/' from the image URLs to match what the view expects
+    const relativeImages = images.map(url => {
+        const mediaIndex = url.indexOf('/media/');
+        return mediaIndex !== -1 ? url.substring(mediaIndex + 7) : url;
+    });
+
+    fetch('{% url "save-outfit" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: JSON.stringify({ images: relativeImages }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Outfit saved successfully! You have added ' + data.count + ' items.');
+            canvas.innerHTML = '';
+            document.querySelectorAll('.grid > div').forEach(item => {
+                item.style.display = '';
             });
+        } else {
+            alert('Failed to save outfit: ' + (data.error || 'Unknown error.'));
         }
-
-        document.getElementById('save-outfit-btn').addEventListener('click', function() {
-            const canvas = document.getElementById('outfit-canvas');
-            const images = Array.from(canvas.querySelectorAll('img')).map(img => img.src);
-            if (images.length === 0) {
-                alert('Add at least one item to save an outfit.');
-                return;
-            }
-            fetch('{% url "save-outfit" %}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}',
-                },
-                body: JSON.stringify({ images }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Outfit saved!');
-                    canvas.innerHTML = '';
-                    document.querySelectorAll('.grid > div').forEach(item => {
-                    item.style.display = '';
-                    });
-                } else {
-                    alert('Failed to save outfit.');
-                }
-            });
-        });
-    </script>
+    })
+    .catch(error => {
+        console.error('Error saving outfit:', error);
+        alert('An error occurred while saving the outfit. Check the console for details.');
+    });
+});
+</script>
 {% endblock %}

@@ -6,13 +6,12 @@ Wardrobe - DressCode
 {% block navbar %}
 {% endblock %}
 {% block content %}
-<div class="flex flex-col md:flex-row gap-8 p-6 min-h-screen bg-gray-50">
-  
+<div class="flex flex-col sm:ml-64 p-6 min-h-screen bg-gray-50">
   <!-- Main Content -->
   <div class="flex-1 flex flex-col gap-8">
     <!-- Header -->
     <div class="flex justify-between items-center">
-      <h1 class="text-4xl font-bold">Good Morning, Kendrick</h1>
+      <h1 class="text-4xl font-bold">Good Morning, {{ username }}!</h1>
       <div class="text-right">
         <p class="text-lg font-semibold">{{ today|date:"l, F d, Y" }}</p>
         <p id="real-time-clock" class="text-gray-500"></p>
@@ -89,20 +88,13 @@ Wardrobe - DressCode
   </div>
 </div>
 
-<!-- Profile Section -->
-<div class="fixed bottom-4 left-4 flex items-center gap-2">
-  <img src="{% static 'profile-pic.png' %}" alt="Profile Picture" class="h-12 w-12 rounded-full">
-  <div>
-    <p class="font-semibold">Kendrick Lamar</p>
-    <p class="text-gray-500 text-sm">@kend_notdrake</p>
-  </div>
-</div>
-
-<!-- Download Button -->
-<div class="fixed bottom-4 right-4">
-  <button class="bg-blue-200 text-blue-600 p-3 rounded-full hover:bg-blue-300">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-  </button>
+<!-- Upload Button -->
+<div class="fixed bottom-4 right-4 z-50">
+  <a href="{% url 'add-Clothing' %}" class="bg-blue-200 text-blue-600 p-3 rounded-full hover:bg-blue-300 shadow-lg" title="Upload New Clothing">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0l-4 4m4-4v12"></path>
+    </svg>
+  </a>
 </div>
 
 <script>
