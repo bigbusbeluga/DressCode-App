@@ -45,7 +45,7 @@ Wardrobe - DressCode
             </div>
             <!-- Outfit Modal -->
             <div id="outfit-modal-{{ outfit.id }}" class="fixed inset-0 flex items-center justify-center bg-white/30 backdrop-blur-md z-50 hidden transition-opacity duration-300">
-              <div class="bg-white rounded-lg shadow-lg p-6 w-96 relative">
+              <div class="bg-white rounded-lg shadow-lg p-8 w-[40rem] relative">
                 <!-- Editable Outfit Name -->
                 <form method="post" action="{% url 'edit_outfit_name' outfit.id %}" class="mb-4">
                   {% csrf_token %}
@@ -54,7 +54,7 @@ Wardrobe - DressCode
                     <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 cursor-pointer">Save</button>
                   </div>
                 </form>
-                <div class="flex flex-wrap gap-2 justify-center mb-4">
+                <div class="flex flex-wrap gap-4 justify-center mb-4">
                   {% for clothing in outfit.clothes.all %}
                     <img src="{{ clothing.image.url }}" alt="{{ clothing.name }}" class="w-24 h-24 object-contain rounded shadow-sm">
                   {% endfor %}

@@ -11,7 +11,7 @@ Wardrobe - DressCode
   <div class="flex-1 flex flex-col gap-8">
     <!-- Header -->
     <div class="flex justify-between items-center">
-      <h1 class="text-4xl font-bold">Good Morning, {{ username }}!</h1>
+      <h1 class="text-4xl font-bold">Good Day, <span class="text-pink-400">{{ username }}</span></h1>
       <div class="text-right">
         <p class="text-lg font-semibold">{{ today|date:"l, F d, Y" }}</p>
         <p id="real-time-clock" class="text-gray-500"></p>
@@ -46,11 +46,8 @@ Wardrobe - DressCode
       <!-- Scheduled Outfit -->
       <div class="flex-1 flex flex-col items-center">
         <h2 id="outfit-title" class="text-2xl font-bold mb-4 text-blue-500">Scheduled outfit on {{ today|date:"l, F d, Y" }}</h2>
-        <div id="outfit-images" class="flex gap-4 mb-4 justify-center">
-          <!-- Main clothing items -->
-        </div>
-        <div id="outfit-items" class="flex gap-4 flex-wrap justify-center">
-          <!-- Accessories -->
+        <div id="outfit-images" class="flex gap-4 flex-wrap justify-center">
+          <!-- All outfit items -->
         </div>
         <button class="mt-4 bg-pink-200 text-pink-600 px-4 py-2 rounded hover:bg-pink-300">More Scheduled Outfits</button>
       </div>
@@ -61,28 +58,36 @@ Wardrobe - DressCode
       <!-- Your Stats -->
       <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
         <h3 class="text-xl font-semibold mb-2">Your Stats</h3>
-        <img src="{% static 'stats-image.png' %}" alt="Stats Image" class="h-24 mb-4">
-        <p>You have worn this outfit 5 times for the month of February!</p>
+          <div class="flex items-center gap-2 mb-4">
+          <img src="{% static 'images/stats-image.png' %}" alt="Stats Icon" class="h-36">
+          <div>
+            <p class="text-left"> You have worn this outfit <span class="text-pink-600 font-bold">5 times</span> for the month of May!</p>
+          </div>
+        </div>
       </div>
 
       <!-- Laundry -->
       <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
         <h3 class="text-xl font-semibold mb-2">Laundry</h3>
-        <img src="{% static 'laundry-image.png' %}" alt="Laundry Image" class="h-24 mb-4">
-        <p>You got 10 clothes currently in your laundry. Want to check them out?</p>
+        <div class="flex items-center gap-2 mb-4">
+          <img src="{% static 'images/laundry-image.png' %}" alt="Laundry Icon" class="h-36">
+          <div>
+            <p class="text-left">You got <span class="text-pink-600 font-bold">10 clothes</span> currently in your laundry. Want to check them out?</p>
+          </div>
+        </div>
       </div>
 
       <!-- Weather -->
       <div class="bg-white rounded-xl shadow p-6 flex flex-col items-center text-center">
         <h3 class="text-xl font-semibold mb-2">Weather</h3>
         <div class="flex items-center gap-2 mb-4">
-          <img src="{% static 'weather-icon.png' %}" alt="Weather Icon" class="h-12">
+          <img src="{% static 'images/weather-icon.png' %}" alt="Weather Icon" class="h-36">
           <div>
             <p class="text-2xl font-bold">35°</p>
             <p class="text-gray-500">Partly Cloudy</p>
+            <p class="text-gray-500">Naga City</p>
           </div>
         </div>
-        <p>Naga City</p>
       </div>
     </div>
   </div>
@@ -95,23 +100,16 @@ function showOutfitForDate(dateStr) {
   const outfit = outfits.find(o => o.date === dateStr);
   const title = document.getElementById('outfit-title');
   const imagesDiv = document.getElementById('outfit-images');
-  const itemsDiv = document.getElementById('outfit-items');
 
   title.textContent = `Scheduled outfit on ${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`;
   imagesDiv.innerHTML = '';
-  itemsDiv.innerHTML = '';
   if (outfit) {
-    outfit.clothes.forEach(img => {
+    // Show all items (clothes + accessories) in one section
+    [...outfit.clothes, ...outfit.accessories].forEach(img => {
       const el = document.createElement('img');
       el.src = img;
-      el.className = 'h-24 object-contain rounded border';
+      el.className = 'h-24 object-contain rounded';
       imagesDiv.appendChild(el);
-    });
-    outfit.accessories.forEach(img => {
-      const el = document.createElement('img');
-      el.src = img;
-      el.className = 'h-12 object-contain rounded border';
-      itemsDiv.appendChild(el);
     });
   } else {
     title.textContent = `No scheduled outfit on ${new Date(dateStr).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}`;
@@ -120,14 +118,33 @@ function showOutfitForDate(dateStr) {
 }
 
 // Make calendar days clickable
-document.querySelectorAll('.grid div[data-day]').forEach(day => {
+const calendarDayEls = document.querySelectorAll('.grid div[data-day]');
+let selectedDayEl = null;
+calendarDayEls.forEach(day => {
   day.addEventListener('click', function() {
     const dateStr = this.getAttribute('data-date');
     if (dateStr) {
       showOutfitForDate(dateStr);
+      // Remove highlight from previous
+      if (selectedDayEl) {
+        selectedDayEl.classList.remove('bg-blue-700', 'text-white');
+      }
+      // Highlight this day
+      this.classList.add('bg-blue-700', 'text-white');
+      selectedDayEl = this;
     }
   });
 });
+// Highlight today by default
+(function highlightToday() {
+  const todayStr = '{{ today|date:"Y-m-d" }}';
+  calendarDayEls.forEach(day => {
+    if (day.getAttribute('data-date') === todayStr) {
+      day.classList.add('bg-blue-700', 'text-white');
+      selectedDayEl = day;
+    }
+  });
+})();
 
 // Show outfit for the current date by default
 showOutfitForDate('{{ today|date:"Y-m-d" }}');

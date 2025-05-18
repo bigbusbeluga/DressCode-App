@@ -6,38 +6,46 @@
         </a>
         <ul class="font-bold flex-1">
             <li>
-                <a href="{% url 'homepage' %}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="{% url 'homepage' %}"
+                   class="flex items-center p-2 rounded-lg group
+                   {% if request.resolver_match.url_name == 'homepage' %}bg-pink-100 text-gray-800  font-bold{% else %}text-gray-700 hover:bg-pink-100{% endif %}">
                     <span class="material-symbols-rounded">home</span>
                     <span class="ms-3">Home</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'wardrobe' %}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="{% url 'wardrobe' %}"
+                   class="flex items-center p-2 rounded-lg group
+                   {% if request.resolver_match.url_name == 'wardrobe' %}bg-pink-100 text-gray-800 font-bold{% else %}text-gray-700 hover:bg-pink-100{% endif %}">
                     <span class="material-symbols-rounded">dresser</span>
                     <span class="flex-1 ms-3 whitespace-nowrap">Wardrobe</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-pink-100 group">
                     <span class="material-symbols-rounded">calendar_month</span>
                     <span class="flex-1 ms-3 whitespace-nowrap">Calendar</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'laundry' %}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="{% url 'laundry' %}"
+                   class="flex items-center p-2 rounded-lg group
+                   {% if request.resolver_match.url_name == 'laundry' %}bg-pink-100 text-gray-800 font-bold{% else %}text-gray-700 hover:bg-pink-100{% endif %}">
                     <span class="material-symbols-rounded">laundry</span>
                     <span class="flex-1 ms-3 whitespace-nowrap">Laundry</span>
-                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">3</span>
+                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-pink-800 bg-pink-100 rounded-full">10</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'mixmatch' %}" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="{% url 'mixmatch' %}"
+                   class="flex items-center p-2 rounded-lg group
+                   {% if request.resolver_match.url_name == 'mixmatch' %}bg-pink-100 text-gray-800 font-bold{% else %}text-gray-700 hover:bg-pink-100{% endif %}">
                     <span class="material-symbols-rounded">tune</span>
                     <span class="flex-1 ms-3 whitespace-nowrap">Mix & Match</span>
                 </a>
             </li>
             <li>
-                <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-blue-200 group">
+                <a href="#" class="flex items-center p-2 text-gray-700 rounded-lg hover:bg-pink-100 group">
                     <span class="material-symbols-rounded">settings</span>
                     <span class="flex-1 ms-3 whitespace-nowrap">Settings</span>
                 </a>

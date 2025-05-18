@@ -18,6 +18,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json as pyjson
 import calendar
 from datetime import datetime
+from datetime import date
 
 def landing(request):
     return render(request, 'base/landing.html')
@@ -27,14 +28,15 @@ def home(request):
 
 @login_required(login_url='login')
 def homepage(request):
-    today = timezone.now().date()
+    today = date.today()
     current_month = today.month
     current_year = today.year
 
     # Calculate calendar days for the current month
-    cal = calendar.monthcalendar(current_year, current_month)
+    cal = calendar.Calendar(firstweekday=6)  # 6 = Sunday
+    weeks = cal.monthdayscalendar(current_year, current_month)
     calendar_days = []
-    for week in cal:
+    for week in weeks:
         for day in week:
             calendar_days.append(day if day != 0 else None)
 
@@ -65,7 +67,7 @@ def signup(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Account created successfully!")
-            return redirect('mixmatch')
+            return redirect('homepage')
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -77,7 +79,7 @@ def login_user(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('mixmatch')
+            return redirect('homepage')
         else:
             messages.error(request, 'Username or password is incorrect')
     else:
