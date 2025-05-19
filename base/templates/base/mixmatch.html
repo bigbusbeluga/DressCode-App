@@ -59,7 +59,6 @@ Mix & Match - DressCode
                Accessories
                </a>
             </div>
-            <!-- <a href="{% url 'add-Clothing' %}" class="bg-pink-300 px-4 py-1 rounded-md">Upload</a> -->
          </div>
 
          <!-- Search bar -->
@@ -143,6 +142,15 @@ Mix & Match - DressCode
          <button onclick="closeLimitModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">OK</button>
       </div>
    </div>
+
+   <!-- Modal for save outfit result -->
+   <div id="saveOutfitModal" class="fixed inset-0 flex items-center justify-center bg-white/10 backdrop-blur-md z-50 hidden transition-opacity duration-300">
+      <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm text-center">
+         <h3 id="saveOutfitModalTitle" class="text-lg font-bold mb-2"></h3>
+         <p id="saveOutfitModalMessage" class="mb-4"></p>
+         <button onclick="closeSaveOutfitModal()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">OK</button>
+      </div>
+   </div>
 </main>
 
 <script>
@@ -213,11 +221,27 @@ Mix & Match - DressCode
        });
    }
    
+   function showSaveOutfitModal(title, message) {
+       document.getElementById('saveOutfitModalTitle').innerText = title;
+       document.getElementById('saveOutfitModalMessage').innerText = message;
+       document.getElementById('saveOutfitModal').classList.remove('hidden');
+   }
+   
+   function closeSaveOutfitModal() {
+       document.getElementById('saveOutfitModal').classList.add('hidden');
+       // Clear canvas and reset collection visibility
+       const canvas = document.getElementById('outfit-canvas');
+       canvas.innerHTML = '';
+       document.querySelectorAll('.grid > div').forEach(item => {
+           item.style.display = '';
+       });
+   }
+   
    document.getElementById('save-outfit-btn').addEventListener('click', function() {
        const canvas = document.getElementById('outfit-canvas');
        const images = Array.from(canvas.querySelectorAll('img')).map(img => img.src);
        if (images.length === 0) {
-           alert('Add at least one item to save an outfit.');
+           showSaveOutfitModal('No Items Selected', 'Add at least one item to save an outfit.');
            return;
        }
    
@@ -238,18 +262,14 @@ Mix & Match - DressCode
        .then(response => response.json())
        .then(data => {
            if (data.success) {
-               alert('Outfit saved successfully! You have added ' + data.count + ' items.');
-               canvas.innerHTML = '';
-               document.querySelectorAll('.grid > div').forEach(item => {
-                   item.style.display = '';
-               });
+               showSaveOutfitModal('Outfit Saved!', `Outfit saved successfully! You have added ${data.count} items.`);
            } else {
-               alert('Failed to save outfit: ' + (data.error || 'Unknown error.'));
+               showSaveOutfitModal('Save Failed', `Failed to save outfit: ${data.error || 'Unknown error.'}`);
            }
        })
        .catch(error => {
            console.error('Error saving outfit:', error);
-           alert('An error occurred while saving the outfit. Check the console for details.');
+           showSaveOutfitModal('Error', 'An error occurred while saving the outfit. Please try again.');
        });
    });
    

@@ -121,18 +121,19 @@ def wardrobe(request):
     if request.user.is_authenticated:
         clothing = Clothing.objects.filter(user=request.user)
         clothing_json = pyjson.dumps([
-            {
-                'id': item.id,
-                'name': item.name,
-                'image': item.image.url,
-                'is_favorite': item.isFavorite,
-                'brand': item.brand,
-                'image_url': item.image.url,
-                'description': item.description,
-            }
+        {
+            'id': item.id,
+            'name': item.name,
+            'image': item.image.url,
+            'is_favorite': item.isFavorite,
+            'brand': item.brand,
+            'image_url': item.image.url,
+            'description': item.description,
+            'category': item.category.name,
+            'category_id': item.category.id,  # Add category ID
+        }
             for item in clothing
         ], cls=DjangoJSONEncoder)
-
         if is_favorite: 
             clothing = Clothing.objects.filter(user=request.user, isFavorite = True)
         elif category_filter == 'Outfits':
@@ -204,8 +205,8 @@ def edit_outfit_date(request, pk):
         if date:
             outfit.date = date
             outfit.save()
-        return redirect('wardrobe')
-    return redirect('wardrobe')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required(login_url='login')
 def edit_outfit_name(request, pk):
@@ -215,8 +216,8 @@ def edit_outfit_name(request, pk):
         if name:
             outfit.name = name
             outfit.save()
-        return redirect('wardrobe')
-    return redirect('wardrobe')
+        return redirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required(login_url='login')
 def edit_clothing(request, pk):
@@ -246,6 +247,6 @@ def update_clothing(request, pk):
         form.save()
         return JsonResponse({'success': True})
     else:
-        print(form.errors)
-
-    return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+        errors = form.errors.as_json()
+        print("Form errors:", errors)  # Log errors for debugging
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
