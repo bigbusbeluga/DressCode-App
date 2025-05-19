@@ -100,7 +100,7 @@ def mixmatch(request):
             outfits = Outfit.objects.filter(user=request.user).prefetch_related('clothes')
             clothing = Clothing.objects.none()
         elif category_filter and category_filter != "All":
-            clothing = clothing.filter(categorynameiexact=category_filter)
+            clothing = clothing.filter(category__name__iexact=category_filter)
     else:
         clothing = Clothing.objects.none()
     categories = Category.objects.all()
